@@ -1,0 +1,23 @@
+.background-body {
+  position: absolute;
+  z-index: -1;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-attachment: fixed;
+  width: 100vw;
+  height: 100vh;
+  background-image: url("./Images/clouds.jpg");
+}
+
+body {
+  margin: 0px;
+}
+
+.weather-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.weather-info-container {
+  margin: 0px 0px 150px 150px;
+}

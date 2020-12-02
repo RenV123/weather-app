@@ -5,15 +5,63 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Weather App</title>
+
+    <link rel="stylesheet" href="./css/style.css">
 </head>
 
 <body>
-    <form id="location-date-form">
+    <div class="background-body" id="background"></div>
+    <!-- <form id="location-date-form">
         <label for="city">City:</label><br>
         <input type="text" id="city" name="city"><br>
         <br>
         <input type="submit" value="Submit">
-    </form>
+    </form> -->
+    <div class="weather-container">
+        <div class="weather-container-inner">
+            <div class="weather-info-container">
+                <p id="current-weather-temp">16°</p>
+                <div>
+                    <p id="current-weather-city">London</p>
+                    <p id="current-weather-datetime">06:09 - Monday, 9 Sep '19</p>
+                </div>
+                <img id="current-weather-icon">
+                <p id="current-weather-description">Cloudy</p>
+            </div>
+        </div>
+        <div class="sidebar">
+            <div>
+                <input type="text" id="location-input" placeholder="Enter location">
+                <ul>
+                    <li>London</li>
+                    <li>New York</li>
+                    <li>Berlin</li>
+                </ul>
+                <hr>
+                <p>Weather Details</p>
+                <table class="weather-details">
+                    <tr>
+                        <td>Cloudy</td>
+                        <td id="current-weather-cloud">12%</td>
+                    </tr>
+                    <tr>
+                        <td>Humidity</td>
+                        <td id="current-weather-humidity">78%</td>
+                    </tr>
+                    <tr>
+                        <td>Wind</td>
+                        <td id="current-weather-wind">1km/h</td>
+                    </tr>
+                    <tr>
+                        <td>Rain</td>
+                        <td id="current-weather-rain">0mm</td>
+                    </tr>
+                </table>
+                <hr>
+            </div>
+        </div>
+    </div>
+
     <label id="weather-info"></label>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="script.js" type="module"></script>
