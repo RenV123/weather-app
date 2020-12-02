@@ -31,16 +31,12 @@ async function getAddressFromLatLng(lat, lng) {
   return response.data.results[0];
 }
 
-async function getPictureforLocation(location) {
+async function getPicture(location, nrOfPictures) {
   var response = await unsplashAPI.get(
-    `/search/photos?query=${location}&per_page=1&orientation=landscape`
+    `/search/photos?query=${location}&per_page=${nrOfPictures}&orientation=landscape`
   );
   //TODO: add some validation
-  return response.data.results[0].urls.raw;
+  return response.data.results;
 }
 
-export {
-  getCurrentWeatherDataForLocation,
-  getAddressFromLatLng,
-  getPictureforLocation,
-};
+export { getCurrentWeatherDataForLocation, getAddressFromLatLng, getPicture };

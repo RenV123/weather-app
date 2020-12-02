@@ -6,43 +6,37 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Weather App</title>
 
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Oxygen&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="./css/style.css">
 </head>
 
 <body>
     <div class="background-body" id="background"></div>
-    <!-- <form id="location-date-form">
-        <label for="city">City:</label><br>
-        <input type="text" id="city" name="city"><br>
-        <br>
-        <input type="submit" value="Submit">
-    </form> -->
     <div class="weather-container">
-        <div class="weather-container-inner">
-            <div class="weather-info-container">
-                <p id="current-weather-temp">16°</p>
-                <div>
-                    <p id="current-weather-city">London</p>
-                    <p id="current-weather-datetime">06:09 - Monday, 9 Sep '19</p>
-                </div>
-                <img id="current-weather-icon">
-                <p id="current-weather-description">Cloudy</p>
-            </div>
-        </div>
         <div class="sidebar">
             <div>
-                <input type="text" id="location-input" placeholder="Enter location">
-                <ul>
+                <input class="searchbox" type="text" id="location-input" placeholder="Enter location">
+                <button class="search-button" id="search-weather-button">
+                    <img src="./css/Images/search.svg">
+                </button>
+                </input>
+                <hr>
+                <ul class="common-picked-locations">
                     <li>London</li>
                     <li>New York</li>
                     <li>Berlin</li>
                 </ul>
                 <hr>
-                <p>Weather Details</p>
+                <p class="weather-details-title">Weather Details</p>
                 <table class="weather-details">
                     <tr>
-                        <td>Cloudy</td>
-                        <td id="current-weather-cloud">12%</td>
+                        <td>Sunrise</td>
+                        <td id="current-weather-sunrise">0:00</td>
+                    </tr>
+                    <tr>
+                        <td>Sunset</td>
+                        <td id="current-weather-sunset">0:00</td>
                     </tr>
                     <tr>
                         <td>Humidity</td>
@@ -53,11 +47,24 @@
                         <td id="current-weather-wind">1km/h</td>
                     </tr>
                     <tr>
-                        <td>Rain</td>
-                        <td id="current-weather-rain">0mm</td>
+                        <td>Pressure</td>
+                        <td id="current-weather-pressure">0mm</td>
                     </tr>
                 </table>
                 <hr>
+            </div>
+        </div>
+        <div class="weather-container-inner">
+            <div class="weather-info-container">
+                <p class="weather-temp" id="current-weather-temp">16°</p>
+                <div>
+                    <p class="weather-city" id="current-weather-city">London</p>
+                    <p class="weather-datetime" id="current-weather-datetime">06:09 - Monday, 9 Sep '19</p>
+                </div>
+                <div>
+                    <img class="weather-icon" id="current-weather-icon" src="./css/Images/cloudy.svg">
+                    <p id="current-weather-description">Cloudy</p>
+                </div>
             </div>
         </div>
     </div>

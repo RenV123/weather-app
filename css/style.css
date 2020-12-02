@@ -1,9 +1,15 @@
+:root {
+  --primary-text-color: #fff;
+  --devider-color: #ffffff9d;
+}
+
 .background-body {
   position: absolute;
   z-index: -1;
   background-repeat: no-repeat;
   background-size: cover;
   background-attachment: fixed;
+  background-position: 0% 100%;
   width: 100vw;
   height: 100vh;
   background-image: url("./Images/clouds.jpg");
@@ -16,8 +22,109 @@ body {
 .weather-container {
   display: flex;
   justify-content: space-between;
+  height: 100vh;
+
+  /*Fonts and colors*/
+  font-family: "Oxygen", sans-serif;
+  color: var(--primary-text-color);
+}
+
+.weather-container-inner {
+  margin: 0px 10vw 10vh 0px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
 }
 
 .weather-info-container {
-  margin: 0px 0px 150px 150px;
+  display: flex;
+}
+
+.weather-info-container > div {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  margin: 0px 25px;
+}
+
+.weather-temp {
+  font-size: 8rem;
+  margin: 0px;
+}
+
+.weather-city {
+  font-size: 3.5rem;
+  margin: 0px;
+}
+
+.weather-icon {
+  width: 80px;
+  height: 80px;
+  color: white;
+}
+
+.sidebar {
+  padding: 50px;
+  width: 250px;
+}
+
+.searchbox {
+  border-width: 0px;
+  border-style: none;
+  background: none;
+  color: var(--primary-text-color);
+}
+
+.search-button {
+  color: white;
+  background: none;
+  border: none;
+  padding: 0px;
+}
+
+.search-button > img {
+  padding-left: 60px;
+  width: 20px;
+  color: var(--primary-text-color);
+}
+
+.search-button:hover {
+  cursor: pointer;
+}
+
+hr {
+  border: 1px solid var(--devider-color);
+}
+
+.common-picked-locations {
+  list-style-type: none;
+  padding: 5px 0px;
+}
+
+.common-picked-locations > li {
+  padding: 15px 0px;
+}
+
+.weather-details-title {
+  padding-top: 15px;
+  font-size: 1.1rem;
+  font-family: "Oxygen Bold", sans-serif;
+  font-weight: 600;
+}
+.weather-details {
+  width: 100%;
+  padding-bottom: 15px;
+}
+.weather-details > tbody > tr > td {
+  padding: 10px 0px;
+}
+
+.weather-details > tbody > tr > td:last-child {
+  text-align: end;
+}
+
+@media only screen and (max-width: 600px) {
+  .weather-container {
+    flex-direction: column;
+  }
 }
