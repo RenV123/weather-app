@@ -26,3 +26,10 @@ jobs:
       # Creates a config file with api keys
       - name: create-config-file
         run: sh setEnvironment.sh ${{ secrets.OPENCAGEDATAAPIKEY }} ${{ secrets.OPENWEATHERMAPAPIKEY }} ${{ secrets.UNSPLASH_ACCESSKEY }} ${{ secrets.UNSPLASH_CLIENTID }}
+        
+      - name: Deploy 🚀
+        uses: JamesIves/github-pages-deploy-action@3.7.1
+        with:
+          BRANCH: main # The branch the action should deploy to.
+          FOLDER: . # The folder the action should deploy.
+          CLEAN: false # Automatically remove deleted files from the deploy branch
