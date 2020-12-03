@@ -6,11 +6,17 @@ import {
 (() => {
   let cityInput = document.getElementById("location-input");
   let bodyElement = document.getElementById("background");
+  var lastLocation = "";
 
   const getRandomNumber = (min, max) => {
     return Math.floor(Math.random() * max - min) + min;
   };
 
+  /**
+   * Uses the API to get a picture and set it as the page background.
+   * @param {string} searchTerm search term to find a matching image for.
+   * @param {boolean} isRandom if true, will retrieve up to 5 images and pick a random one.
+   */
   const requestNewBackground = async (searchTerm, isRandom) => {
     console.log(`searching pic for: ${searchTerm}`);
     let imageData = await getPicture(
@@ -23,6 +29,10 @@ import {
     bodyElement.style.backgroundImage = `url('${imageUrl}')`;
   };
 
+  /**
+   * Fills in the weather elements of the page based on the weather data.
+   * @param {object} weatherData
+   */
   const setWeatherData = (weatherData) => {
     console.log(weatherData);
 
@@ -83,6 +93,9 @@ import {
     );
   };
 
+  /**
+   * Requests the user location
+   */
   const requestUserLocation = () => {
     //https://www.w3schools.com/html/html5_geolocation.asp
     //Note, it's highly likely that a user might deny our site it's location
@@ -96,14 +109,30 @@ import {
     }
   };
 
+  /**
+   * Updates the page based on the user location.
+   * Gets the weather data and displays it
+   * Retrieves a matching background based on the weather description.
+   * @param {string} location
+   */
   const updatePage = async (location) => {
-    let weatherDataResponse = await getCurrentWeatherDataForLocation(location);
-    setWeatherData(weatherDataResponse.data);
+    if (location) {
+      lastLocation = location;
+      let weatherDataResponse = await getCurrentWeatherDataForLocation(
+        location
+      );
+      setWeatherData(weatherDataResponse.data);
 
-    let weatherDescription = weatherDataResponse.data.weather[0].main;
-    requestNewBackground(weatherDescription, true);
+      let weatherDescription = weatherDataResponse.data.weather[0].main;
+      requestNewBackground(weatherDescription, true);
+    }
   };
 
+  /**
+   * Callback with coordinates of user location.
+   * Updates the page with the users location.
+   * @param {object} position
+   */
   const onUserLocationRetrieved = async (position) => {
     let response = await getAddressFromLatLng(
       position.coords.latitude,
@@ -117,13 +146,36 @@ import {
     console.error(error);
   };
 
+  /**
+   * Callback for updating the page.
+   * @param {any} event
+   */
   const onSubmit = async (event) => {
     event.preventDefault();
     updatePage(cityInput.value);
     cityInput.value = "";
   };
 
+  /**
+   * Starts an interval that will update the page at exactly the start of every minute.
+   */
+  const startPageUpdateInterval = () => {
+    /*Update page every minute*/
+    let time = new Date();
+    let secondsTillNextMinute = 60 - time.getSeconds();
+    console.log(secondsTillNextMinute);
+    //Start an interval with the delay of
+    setTimeout(() => {
+      //First time we need to call it manually as the interval will only trigger the next minute.
+      updatePage(lastLocation);
+      setInterval(() => {
+        updatePage(lastLocation);
+      }, 1000 * 60);
+    }, 1000 * secondsTillNextMinute);
+  };
+
   requestUserLocation();
+  startPageUpdateInterval();
 
   /* Add Event Listeners*/
   document
