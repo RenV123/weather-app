@@ -23,7 +23,7 @@ import {
     bodyElement.style.backgroundImage = `url('${imageUrl}')`;
   };
 
-  const setWeatherData = (location, weatherData) => {
+  const setWeatherData = (weatherData) => {
     console.log(weatherData);
 
     /*Weather details */
@@ -36,13 +36,11 @@ import {
       hour12: true,
     };
 
-    //reference: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat
+    //ref: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat
     const dateTimeOptions = {
-      hour: "numeric",
-      minute: "numeric",
-      weekday: "long", //long means written in full.
+      weekday: "long",
       day: "numeric",
-      month: "short",
+      month: "long",
       year: "numeric",
     };
 
@@ -65,9 +63,21 @@ import {
     document.getElementById("current-weather-temp").innerHTML = `${parseInt(
       weatherData.main.temp
     )}°`;
-    document.getElementById("current-weather-city").innerHTML = location;
+    document.getElementById("current-weather-city").innerHTML =
+      weatherData.name;
+    document.getElementById("current-weather-description").innerHTML =
+      weatherData.weather[0].description;
+
+    //Note not using the time of the weather data but the currenttime
+    let currentTime = new Date();
+    let currentTimeStr = currentTime.toLocaleString(undefined, timeOptions);
+    let currentTimeParts = currentTimeStr.split(" ");
+    document.getElementById("current-weather-time").innerHTML = `${
+      currentTimeParts[0]
+    } ${currentTimeParts[1].fontsize(6)} `;
+
     document.getElementById(
-      "current-weather-datetime"
+      "current-weather-date"
     ).innerHTML = new Intl.DateTimeFormat("en-GB", dateTimeOptions).format(
       dateTime
     );
@@ -88,7 +98,7 @@ import {
 
   const updatePage = async (location) => {
     let weatherDataResponse = await getCurrentWeatherDataForLocation(location);
-    setWeatherData(location, weatherDataResponse.data);
+    setWeatherData(weatherDataResponse.data);
 
     let weatherDescription = weatherDataResponse.data.weather[0].main;
     requestNewBackground(weatherDescription, true);
@@ -110,11 +120,28 @@ import {
   const onSubmit = async (event) => {
     event.preventDefault();
     updatePage(cityInput.value);
+    cityInput.value = "";
   };
 
   requestUserLocation();
+
+  /* Add Event Listeners*/
   document
     .getElementById("search-weather-button")
     .addEventListener("click", onSubmit);
   cityInput.addEventListener("submit", onSubmit);
+  cityInput.addEventListener("keyup", (event) => {
+    if (event.key === "Enter") {
+      onSubmit(event);
+    }
+  });
+
+  Array.from(document.querySelectorAll("#weather-locations > li")).forEach(
+    (liElement) => {
+      liElement.addEventListener("click", () => {
+        cityInput.value = "";
+        updatePage(liElement.innerHTML);
+      });
+    }
+  );
 })();

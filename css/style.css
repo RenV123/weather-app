@@ -29,21 +29,42 @@ body {
   color: var(--primary-text-color);
 }
 
+.date-info-container {
+  min-width: 400px;
+}
+
+.weather-time {
+  font-size: 4rem;
+  margin: 0px;
+}
+
+.weather-time-container {
+  display: flex;
+  align-items: flex-end;
+}
+.weather-date {
+  margin: 15px 0px;
+  font-size: 2rem;
+}
+
 .weather-container-inner {
-  margin: 0px 10vw 10vh 0px;
+  margin: 150px 150px;
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
+  flex-grow: 2;
+  justify-content: space-between;
 }
 
 .weather-info-container {
   display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
 }
 
 .weather-info-container > div {
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
+  justify-content: center;
   margin: 0px 25px;
 }
 
@@ -53,7 +74,7 @@ body {
 }
 
 .weather-city {
-  font-size: 3.5rem;
+  font-size: 4rem;
   margin: 0px;
 }
 
@@ -63,9 +84,27 @@ body {
   color: white;
 }
 
+.weather-description::first-letter {
+  text-transform: capitalize;
+}
+
 .sidebar {
+  min-width: 350px;
+  width: 350px;
+  height: 100vh;
+  backdrop-filter: blur(10px);
+}
+
+.sidebar-inner {
   padding: 50px;
-  width: 250px;
+}
+
+.sidebar-background {
+  position: absolute;
+  background-color: #0c0c0c5e;
+  z-index: -1;
+  width: 350px;
+  height: calc(100vh);
 }
 
 .searchbox {
@@ -104,6 +143,9 @@ hr {
 .common-picked-locations > li {
   padding: 15px 0px;
 }
+.common-picked-locations > li:hover {
+  cursor: pointer;
+}
 
 .weather-details-title {
   padding-top: 15px;
@@ -111,10 +153,12 @@ hr {
   font-family: "Oxygen Bold", sans-serif;
   font-weight: 600;
 }
+
 .weather-details {
   width: 100%;
   padding-bottom: 15px;
 }
+
 .weather-details > tbody > tr > td {
   padding: 10px 0px;
 }
