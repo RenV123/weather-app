@@ -31,11 +31,19 @@ import {
       isRandom ? 5 : 0 //if it's random get 10 pictures
     );
     let nr = getRandomNumber(0, 5);
+
+    //Use regular sized image for now
+    //TODO: query bg size based on viewport size
     let imageUrl = imageData[nr].urls.regular;
     setBackground(imageUrl);
   };
 
   const setBackground = (url) => {
+    //Don't do anything if there's a background still loading.
+    if (isBackgroundLoading) {
+      console.log(`Skipped loading bg: ${url}`);
+      return;
+    }
     let isBackgroundOneLarger =
       Number(backgroundOneElement.style.zIndex) >
       Number(backgroundTwoElement.style.zIndex);
@@ -50,22 +58,19 @@ import {
     imgBackgroundLoader.onload = (event) => {
       lowerBg.style.backgroundImage = `url('${imgBackgroundLoader.src}')`;
 
-      //Lower opacity
-      if (!isBackgroundLoading) {
-        var currentOpacity = 1.0;
-        isBackgroundLoading = true;
-        lowerOpacityInterval = setInterval(() => {
-          currentOpacity -= 0.05;
-          upperBg.style.opacity = `${currentOpacity}`;
-          if (currentOpacity <= 0) {
-            lowerBg.style.zIndex = "-1"; //lower is now upper
-            upperBg.style.zIndex = "-2";
-            upperBg.style.opacity = "100%";
-            clearInterval(lowerOpacityInterval);
-            isBackgroundLoading = false;
-          }
-        }, 50); //total transition time 1 sec
-      }
+      var currentOpacity = 1.0;
+      isBackgroundLoading = true;
+      lowerOpacityInterval = setInterval(() => {
+        currentOpacity -= 0.05;
+        upperBg.style.opacity = `${currentOpacity}`;
+        if (currentOpacity <= 0) {
+          lowerBg.style.zIndex = "-1"; //lower is now upper
+          upperBg.style.zIndex = "-2";
+          upperBg.style.opacity = "100%";
+          clearInterval(lowerOpacityInterval);
+          isBackgroundLoading = false;
+        }
+      }, 50); //total transition time 1 sec
     };
     imgBackgroundLoader.src = url;
   };
