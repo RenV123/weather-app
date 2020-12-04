@@ -3,16 +3,24 @@
   --devider-color: #ffffff9d;
 }
 
-.background-body {
+.background-body-two {
   position: absolute;
-  z-index: -1;
   background-repeat: no-repeat;
   background-size: cover;
   background-attachment: fixed;
   background-position: 0% 100%;
   width: 100vw;
   height: 100vh;
-  background-image: url("./Images/clouds.jpg");
+}
+
+.background-body-one {
+  position: absolute;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-attachment: fixed;
+  background-position: 0% 100%;
+  width: 100vw;
+  height: 100vh;
 }
 
 body {

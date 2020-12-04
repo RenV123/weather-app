@@ -5,7 +5,8 @@ import {
 } from "./Api/apis.js";
 (() => {
   let cityInput = document.getElementById("location-input");
-  let bodyElement = document.getElementById("background");
+  let backgroundOneElement = document.getElementById("background-one");
+  let backgroundTwoElement = document.getElementById("background-one");
   var lastLocation = "";
 
   const getRandomNumber = (min, max) => {
@@ -18,16 +19,44 @@ import {
    * @param {boolean} isRandom if true, will retrieve up to 5 images and pick a random one.
    */
   const requestNewBackground = async (searchTerm, isRandom) => {
-    console.log(`searching pic for: ${searchTerm}`);
     let imageData = await getPicture(
       `${searchTerm}`,
       isRandom ? 5 : 0 //if it's random get 10 pictures
     );
     let nr = getRandomNumber(0, 5);
     let imageUrl = imageData[nr].urls.raw;
-    console.log(`picking nr: ${nr}: ${imageUrl}`);
-    bodyElement.style.backgroundImage = `url('${imageUrl}')`;
+    setBackground(imageUrl);
   };
+
+  const setBackground = (url) => {
+    let isBackgroundOneLarger =
+      Number(backgroundOneElement.style.zIndex) >
+      Number(backgroundTwoElement.style.zIndex);
+    let upperBg = isBackgroundOneLarger
+      ? backgroundOneElement
+      : backgroundTwoElement;
+    let lowerBg = isBackgroundOneLarger
+      ? backgroundTwoElement
+      : backgroundOneElement;
+
+    //Set img to lowerbg, once loaded lower opacity of upperbg to 0 and swap zIndexes;
+    lowerBg.onload = (event) => {
+      //Lower opacity
+      let currentOpacity = 100;
+      let lowerOpacityInterval = setInterval(() => {
+        upperBg.style.opacity = `${--currentOpacity}%`;
+        if (opacity === 0) {
+          lowerBg.style.zIndex = "-1"; //lower is now upper
+          upperBg.style.zIndex = "-2";
+          upperBg.style.opacity = "100%";
+          clearInterval(lowerOpacityInterval);
+        }
+      }, 100); //transition = 5sec
+    };
+    lowerBg.style.backgroundImage = `url('${url}')`;
+  };
+
+  const onBackgroundLoaded = (backgroundElement) => {};
 
   /**
    * Fills in the weather elements of the page based on the weather data.
@@ -163,7 +192,6 @@ import {
     /*Update page every minute*/
     let time = new Date();
     let secondsTillNextMinute = 60 - time.getSeconds();
-    console.log(secondsTillNextMinute);
     //Start an interval with the delay of
     setTimeout(() => {
       //First time we need to call it manually as the interval will only trigger the next minute.
