@@ -59,7 +59,7 @@ import {
             isBackgroundTransitioning = false;
             clearInterval(lowerOpacityInterval);
           }
-        }, 50); //total transition time 5 sec
+        }, 10); //total transition time 5 sec
       }
     };
     imgBackgroundLoader.src = url;
