@@ -4,16 +4,18 @@ import {
   getPicture,
 } from "./Api/apis.js";
 (() => {
+  const NR_OF_LOCATIONS_IN_HISTORY = 5;
   let cityInput = document.getElementById("location-input");
   let backgroundOneElement = document.getElementById("background-one");
   let backgroundTwoElement = document.getElementById("background-two");
   let imgBackgroundLoader = new Image();
   let lastLocation = "";
+  let lastBackgroundUrl = "";
   let lowerOpacityInterval = undefined;
   let isBackgroundLoading = false;
 
   /**
-   * Returns a random number between min and max (inclusive)
+   * Returns a random number between min (inclusive) and max (exclusive)
    * @param {number} min
    * @param {number} max
    */
@@ -29,13 +31,20 @@ import {
   const requestNewBackground = async (searchTerm, isRandom) => {
     let imageData = await getPicture(
       `${searchTerm}`,
-      isRandom ? 5 : 0 //if it's random get 10 pictures
+      isRandom ? 10 : 0 //if it's random get 10 pictures
     );
-    let nr = getRandomNumber(0, 5);
 
+    let imageUrl = imageData[0].urls.regular;
+    if (imageData.length > 1 && isRandom) {
+      let nr = getRandomNumber(0, imageData.length);
+      imageUrl = imageData[nr].urls.regular;
+      if (imageUrl === lastBackgroundUrl) {
+        nr = ++nr % imageData.length;
+        imageUrl = imageData[nr].urls.regular;
+      }
+    }
     //Use regular sized image for now
     //TODO: query bg size based on viewport size
-    let imageUrl = imageData[nr].urls.regular;
     setBackground(imageUrl);
   };
 
@@ -59,7 +68,6 @@ import {
     // This creates a smooth transition between backgrounds
     imgBackgroundLoader.onload = (event) => {
       lowerBg.style.backgroundImage = `url('${imgBackgroundLoader.src}')`;
-
       var currentOpacity = 1.0;
       isBackgroundLoading = true;
       lowerOpacityInterval = setInterval(() => {
@@ -75,6 +83,7 @@ import {
       }, 50); //total transition time 1 sec
     };
     imgBackgroundLoader.src = url;
+    lastBackgroundUrl = url;
   };
 
   /**
@@ -157,7 +166,9 @@ import {
       locationsContainer.insertBefore(li, locationsContainer.firstChild);
 
       //Check if amount of locations is not higher then max
-      while (locationsContainer.childElementCount > 5) {
+      while (
+        locationsContainer.childElementCount > NR_OF_LOCATIONS_IN_HISTORY
+      ) {
         locationsContainer.removeChild(locationsContainer.lastChild);
       }
     }
@@ -193,7 +204,7 @@ import {
       );
       setWeatherData(weatherDataResponse.data);
 
-      let weatherDescription = weatherDataResponse.data.weather[0].main;
+      let weatherDescription = `${location} ${weatherDataResponse.data.weather[0].main}`;
       requestNewBackground(weatherDescription, true);
     }
   };
