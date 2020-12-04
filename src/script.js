@@ -9,7 +9,12 @@ import {
   let backgroundTwoElement = document.getElementById("background-two");
   let imgBackgroundLoader = new Image();
   let lastLocation = "";
-  let isBackgroundTransitioning = false;
+  let lowerOpacityInterval = undefined;
+  /**
+   * Returns a random number between min and max (inclusive)
+   * @param {number} min
+   * @param {number} max
+   */
   const getRandomNumber = (min, max) => {
     return Math.floor(Math.random() * max - min) + min;
   };
@@ -25,7 +30,7 @@ import {
       isRandom ? 5 : 0 //if it's random get 10 pictures
     );
     let nr = getRandomNumber(0, 5);
-    let imageUrl = imageData[nr].urls.raw;
+    let imageUrl = imageData[nr].urls.regular;
     setBackground(imageUrl);
   };
 
@@ -45,35 +50,27 @@ import {
       lowerBg.style.backgroundImage = `url('${imgBackgroundLoader.src}')`;
 
       //Lower opacity
-      let currentOpacity = 100;
+      var currentOpacity = 1.0;
 
-      //Only start interval if old one is done.
-      if (!isBackgroundTransitioning) {
-        isBackgroundTransitioning = true;
-        let lowerOpacityInterval = setInterval(() => {
-          upperBg.style.opacity = `${--currentOpacity}%`;
-          if (currentOpacity === 0) {
-            lowerBg.style.zIndex = "-1"; //lower is now upper
-            upperBg.style.zIndex = "-2";
-            upperBg.style.opacity = "100%";
-            isBackgroundTransitioning = false;
-            clearInterval(lowerOpacityInterval);
-          }
-        }, 10); //total transition time 5 sec
-      }
+      lowerOpacityInterval = setInterval(() => {
+        currentOpacity -= 0.05;
+        upperBg.style.opacity = `${currentOpacity}`;
+        if (currentOpacity <= 0) {
+          lowerBg.style.zIndex = "-1"; //lower is now upper
+          upperBg.style.zIndex = "-2";
+          upperBg.style.opacity = "100%";
+          clearInterval(lowerOpacityInterval);
+        }
+      }, 50); //total transition time 1 sec
     };
     imgBackgroundLoader.src = url;
   };
-
-  const onBackgroundLoaded = (backgroundElement) => {};
 
   /**
    * Fills in the weather elements of the page based on the weather data.
    * @param {object} weatherData
    */
   const setWeatherData = (weatherData) => {
-    console.log(weatherData);
-
     /*Weather details */
     let sunriseDateTime = new Date(weatherData.sys.sunrise * 1000);
     let sunsetDateTime = new Date(weatherData.sys.sunset * 1000);
@@ -207,7 +204,7 @@ import {
       updatePage(lastLocation);
       setInterval(() => {
         updatePage(lastLocation);
-      }, 1000 * 10);
+      }, 1000 * 60);
     }, 1000 * secondsTillNextMinute);
   };
 
