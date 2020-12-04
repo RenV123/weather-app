@@ -11,6 +11,7 @@ import {
   let lastLocation = "";
   let lowerOpacityInterval = undefined;
   let isBackgroundLoading = false;
+
   /**
    * Returns a random number between min and max (inclusive)
    * @param {number} min
@@ -55,6 +56,7 @@ import {
       : backgroundOneElement;
 
     //Set img to lowerbg, once loaded lower opacity of upperbg to 0 and swap zIndexes;
+    // This creates a smooth transition between backgrounds
     imgBackgroundLoader.onload = (event) => {
       lowerBg.style.backgroundImage = `url('${imgBackgroundLoader.src}')`;
 
@@ -137,6 +139,30 @@ import {
     );
   };
 
+  const addWeatherLocation = (newLocation) => {
+    //Get all locations
+    let locationElements = Array.from(
+      document.querySelectorAll("#weather-locations > li")
+    );
+    //Confirm new location is not in it yet.
+    let isInList =
+      locationElements.find((element) => element.innerHTML == newLocation) !==
+      undefined;
+    if (!isInList) {
+      //Add new location
+      let locationsContainer = document.getElementById("weather-locations");
+      var li = document.createElement("li");
+      li.appendChild(document.createTextNode(newLocation));
+      li.onclick = onListElementClick;
+      locationsContainer.insertBefore(li, locationsContainer.firstChild);
+
+      //Check if amount of locations is not higher then max
+      while (locationsContainer.childElementCount > 5) {
+        locationsContainer.removeChild(locationsContainer.lastChild);
+      }
+    }
+  };
+
   /**
    * Requests the user location
    */
@@ -191,16 +217,6 @@ import {
   };
 
   /**
-   * Callback for updating the page.
-   * @param {any} event
-   */
-  const onSubmit = async (event) => {
-    event.preventDefault();
-    updatePage(cityInput.value);
-    cityInput.value = "";
-  };
-
-  /**
    * Starts an interval that will update the page at exactly the start of every minute.
    */
   const startPageUpdateInterval = () => {
@@ -217,8 +233,21 @@ import {
     }, 1000 * secondsTillNextMinute);
   };
 
-  requestUserLocation();
-  startPageUpdateInterval();
+  /**
+   * Callback for updating the page.
+   * @param {any} event
+   */
+  const onSubmit = async (event) => {
+    event.preventDefault();
+    addWeatherLocation(cityInput.value);
+    updatePage(cityInput.value);
+    cityInput.value = "";
+  };
+
+  function onListElementClick() {
+    cityInput.value = "";
+    updatePage(this.innerHTML);
+  }
 
   /* Add Event Listeners*/
   document
@@ -233,10 +262,10 @@ import {
 
   Array.from(document.querySelectorAll("#weather-locations > li")).forEach(
     (liElement) => {
-      liElement.addEventListener("click", () => {
-        cityInput.value = "";
-        updatePage(liElement.innerHTML);
-      });
+      liElement.addEventListener("click", onListElementClick);
     }
   );
+
+  requestUserLocation();
+  startPageUpdateInterval();
 })();
