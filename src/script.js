@@ -6,9 +6,10 @@ import {
 (() => {
   let cityInput = document.getElementById("location-input");
   let backgroundOneElement = document.getElementById("background-one");
-  let backgroundTwoElement = document.getElementById("background-one");
-  var lastLocation = "";
-
+  let backgroundTwoElement = document.getElementById("background-two");
+  let imgBackgroundLoader = new Image();
+  let lastLocation = "";
+  let isBackgroundTransitioning = false;
   const getRandomNumber = (min, max) => {
     return Math.floor(Math.random() * max - min) + min;
   };
@@ -40,20 +41,28 @@ import {
       : backgroundOneElement;
 
     //Set img to lowerbg, once loaded lower opacity of upperbg to 0 and swap zIndexes;
-    lowerBg.onload = (event) => {
+    imgBackgroundLoader.onload = (event) => {
+      lowerBg.style.backgroundImage = `url('${imgBackgroundLoader.src}')`;
+
       //Lower opacity
       let currentOpacity = 100;
-      let lowerOpacityInterval = setInterval(() => {
-        upperBg.style.opacity = `${--currentOpacity}%`;
-        if (opacity === 0) {
-          lowerBg.style.zIndex = "-1"; //lower is now upper
-          upperBg.style.zIndex = "-2";
-          upperBg.style.opacity = "100%";
-          clearInterval(lowerOpacityInterval);
-        }
-      }, 100); //transition = 5sec
+
+      //Only start interval if old one is done.
+      if (!isBackgroundTransitioning) {
+        isBackgroundTransitioning = true;
+        let lowerOpacityInterval = setInterval(() => {
+          upperBg.style.opacity = `${--currentOpacity}%`;
+          if (currentOpacity === 0) {
+            lowerBg.style.zIndex = "-1"; //lower is now upper
+            upperBg.style.zIndex = "-2";
+            upperBg.style.opacity = "100%";
+            isBackgroundTransitioning = false;
+            clearInterval(lowerOpacityInterval);
+          }
+        }, 50); //total transition time 5 sec
+      }
     };
-    lowerBg.style.backgroundImage = `url('${url}')`;
+    imgBackgroundLoader.src = url;
   };
 
   const onBackgroundLoaded = (backgroundElement) => {};
@@ -198,7 +207,7 @@ import {
       updatePage(lastLocation);
       setInterval(() => {
         updatePage(lastLocation);
-      }, 1000 * 60);
+      }, 1000 * 10);
     }, 1000 * secondsTillNextMinute);
   };
 
