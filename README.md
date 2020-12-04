@@ -1,4 +1,4 @@
-# weather-app
+# Weather App
 
 A animalistic site that displays the weather info. Along with a picture
 of the entered location. Created as an exercise to learn API's.
@@ -13,9 +13,13 @@ API keys to github. I'm trying to find a way around this problem.
 ## Tools/Frameworks/Languages used:
  * JS, HTML and CSS
  * Axios for the API Requests
- * OpenWeatherMap API
- * OpenCageData API
- * Unsplash API
+ * [OpenWeatherMap API](https://openweathermap.org/)
+ * [OpenCageData API](https://opencagedata.com/) Used for reverse geocoding
+ * [Unsplash API](https://unsplash.com/) //For images
+
+## Resources
+ * [Google Fonts](https://fonts.google.com/)
+ * [IconFinder](https://www.iconfinder.com/)
 
 ## Todo's:
  * Fix API keys
