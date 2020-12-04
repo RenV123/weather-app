@@ -15,7 +15,7 @@ API keys to github. I'm trying to find a way around this problem.
  * Axios for the API Requests
  * [OpenWeatherMap API](https://openweathermap.org/)
  * [OpenCageData API](https://opencagedata.com/) Used for reverse geocoding
- * [Unsplash API](https://unsplash.com/) //For images
+ * [Unsplash API](https://unsplash.com/) for images
 
 ## Resources
  * [Google Fonts](https://fonts.google.com/)
