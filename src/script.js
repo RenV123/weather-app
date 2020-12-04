@@ -10,6 +10,7 @@ import {
   let imgBackgroundLoader = new Image();
   let lastLocation = "";
   let lowerOpacityInterval = undefined;
+  let isBackgroundLoading = false;
   /**
    * Returns a random number between min and max (inclusive)
    * @param {number} min
@@ -50,18 +51,21 @@ import {
       lowerBg.style.backgroundImage = `url('${imgBackgroundLoader.src}')`;
 
       //Lower opacity
-      var currentOpacity = 1.0;
-
-      lowerOpacityInterval = setInterval(() => {
-        currentOpacity -= 0.05;
-        upperBg.style.opacity = `${currentOpacity}`;
-        if (currentOpacity <= 0) {
-          lowerBg.style.zIndex = "-1"; //lower is now upper
-          upperBg.style.zIndex = "-2";
-          upperBg.style.opacity = "100%";
-          clearInterval(lowerOpacityInterval);
-        }
-      }, 50); //total transition time 1 sec
+      if (!isBackgroundLoading) {
+        var currentOpacity = 1.0;
+        isBackgroundLoading = true;
+        lowerOpacityInterval = setInterval(() => {
+          currentOpacity -= 0.05;
+          upperBg.style.opacity = `${currentOpacity}`;
+          if (currentOpacity <= 0) {
+            lowerBg.style.zIndex = "-1"; //lower is now upper
+            upperBg.style.zIndex = "-2";
+            upperBg.style.opacity = "100%";
+            clearInterval(lowerOpacityInterval);
+            isBackgroundLoading = false;
+          }
+        }, 50); //total transition time 1 sec
+      }
     };
     imgBackgroundLoader.src = url;
   };
