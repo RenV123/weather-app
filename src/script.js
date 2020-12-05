@@ -4,15 +4,29 @@ import {
   getPicture,
 } from "./Api/apis.js";
 (() => {
-  const NR_OF_LOCATIONS_IN_HISTORY = 5;
-  let cityInput = document.getElementById("location-input");
-  let backgroundOneElement = document.getElementById("background-one");
-  let backgroundTwoElement = document.getElementById("background-two");
+  const NR_OF_LOCATIONS_IN_HISTORY = 3;
   let imgBackgroundLoader = new Image();
   let lastLocation = "";
   let lastBackgroundUrl = "";
   let lowerOpacityInterval = undefined;
   let isBackgroundLoading = false;
+  let cityInput = document.getElementById("location-input");
+  let backgroundOneElement = document.getElementById("background-one");
+  let backgroundTwoElement = document.getElementById("background-two");
+
+  //Define all elements holding data in a single object so we can edit easily later.
+  let weatherElements = {
+    sunrise: document.getElementById("current-weather-sunrise"),
+    sunset: document.getElementById("current-weather-sunset"),
+    humidity: document.getElementById("current-weather-humidity"),
+    wind: document.getElementById("current-weather-wind"),
+    pressure: document.getElementById("current-weather-pressure"),
+    temp: document.getElementById("current-weather-temp"),
+    city: document.getElementById("current-weather-city"),
+    description: document.getElementById("current-weather-description"),
+    time: document.getElementById("current-weather-time"),
+    date: document.getElementById("current-weather-date"),
+  };
 
   /**
    * Returns a random number between min (inclusive) and max (exclusive)
@@ -48,6 +62,11 @@ import {
     setBackground(imageUrl);
   };
 
+  /**
+   * Loads the background in and once it's loaded creates a transition
+   * effect to the new background.
+   * @param {string} url
+   */
   const setBackground = (url) => {
     //Don't do anything if there's a background still loading.
     if (isBackgroundLoading) {
@@ -109,46 +128,39 @@ import {
       year: "numeric",
     };
 
-    document.getElementById(
-      "current-weather-sunrise"
-    ).innerHTML = `${sunriseDateTime.toLocaleString(undefined, timeOptions)}`;
-    document.getElementById(
-      "current-weather-sunset"
-    ).innerHTML = `${sunsetDateTime.toLocaleString(undefined, timeOptions)}`;
-    document.getElementById(
-      "current-weather-humidity"
-    ).innerHTML = `${weatherData.main.humidity}%`;
-    document.getElementById(
-      "current-weather-wind"
-    ).innerHTML = `${weatherData.wind.speed}km/h`;
-    document.getElementById(
-      "current-weather-pressure"
-    ).innerHTML = `${weatherData.main.pressure} hPa`;
+    //Show the current time with AM slightly smaller
+    let currentTimeParts = new Date()
+      .toLocaleString(undefined, timeOptions)
+      .split(" ");
+    let formattedTime = `${currentTimeParts[0]} ${currentTimeParts[1].fontsize(
+      6
+    )}`;
+    let formattedDate = new Intl.DateTimeFormat(
+      undefined,
+      dateTimeOptions
+    ).format(dateTime);
 
-    document.getElementById("current-weather-temp").innerHTML = `${parseInt(
-      weatherData.main.temp
-    )}°`;
-    document.getElementById("current-weather-city").innerHTML =
-      weatherData.name;
-    document.getElementById("current-weather-description").innerHTML =
+    weatherElements["sunrise"].innerHTML = `${sunriseDateTime.toLocaleString(
+      undefined,
+      timeOptions
+    )}`;
+    weatherElements["sunset"].innerHTML = `${sunsetDateTime.toLocaleString(
+      undefined,
+      timeOptions
+    )}`;
+    weatherElements["humidity"].innerHTML = `${weatherData.main.humidity}%`;
+    weatherElements["wind"].innerHTML = `${weatherData.wind.speed}km/h`;
+    weatherElements["pressure"].innerHTML = `${weatherData.main.pressure} hPa`;
+    weatherElements["temp"].innerHTML = `${parseInt(weatherData.main.temp)}°`;
+    weatherElements["city"].innerHTML = weatherData.name;
+    weatherElements["description"].innerHTML =
       weatherData.weather[0].description;
-
-    //Note not using the time of the weather data but the currenttime
-    let currentTime = new Date();
-    let currentTimeStr = currentTime.toLocaleString(undefined, timeOptions);
-    let currentTimeParts = currentTimeStr.split(" ");
-    document.getElementById("current-weather-time").innerHTML = `${
-      currentTimeParts[0]
-    } ${currentTimeParts[1].fontsize(6)} `;
-
-    document.getElementById(
-      "current-weather-date"
-    ).innerHTML = new Intl.DateTimeFormat("en-GB", dateTimeOptions).format(
-      dateTime
-    );
+    weatherElements["time"].innerHTML = formattedTime;
+    weatherElements["date"].innerHTML = formattedDate;
   };
 
   const addWeatherLocation = (newLocation) => {
+    //TODO: Store these locations in a cookie
     //Get all locations
     let locationElements = Array.from(
       document.querySelectorAll("#weather-locations > li")
@@ -195,17 +207,23 @@ import {
    * Gets the weather data and displays it
    * Retrieves a matching background based on the weather description.
    * @param {string} location
+   * @return {boolean} true if the update was successful
    */
   const updatePage = async (location) => {
     if (location) {
+      let weatherDataResponse = undefined;
+      try {
+        weatherDataResponse = await getCurrentWeatherDataForLocation(location);
+      } catch (error) {
+        console.error(error);
+        return false;
+      }
       lastLocation = location;
-      let weatherDataResponse = await getCurrentWeatherDataForLocation(
-        location
-      );
       setWeatherData(weatherDataResponse.data);
 
       let weatherDescription = `${location} ${weatherDataResponse.data.weather[0].main}`;
       requestNewBackground(weatherDescription, true);
+      return true;
     }
   };
 
@@ -250,9 +268,17 @@ import {
    */
   const onSubmit = async (event) => {
     event.preventDefault();
-    addWeatherLocation(cityInput.value);
-    updatePage(cityInput.value);
-    cityInput.value = "";
+    if (await updatePage(cityInput.value)) {
+      addWeatherLocation(cityInput.value);
+      cityInput.value = "";
+    } else {
+      //Show error animation by adding error class.
+      cityInput.classList.add("error");
+      setTimeout(function () {
+        cityInput.classList.remove("error");
+        cityInput.value = "";
+      }, 1000);
+    }
   };
 
   function onListElementClick() {

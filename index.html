@@ -16,21 +16,20 @@
     <div class="background-body-two" id="background-two" style="z-index: -2;"></div>
     <div class="weather-container">
         <div class="sidebar">
-            <div class="sidebar-background"></div>
             <div class="sidebar-inner">
                 <input class="searchbox" type="text" id="location-input" placeholder="Enter location">
                 <button class="search-button" id="search-weather-button">
                     <img src="./css/Images/search.svg">
                 </button>
                 </input>
-                <hr>
+                <hr id="searchbox-underline">
                 <ul class="common-picked-locations" id="weather-locations">
                     <li>London</li>
                     <li>New York</li>
                     <li>Berlin</li>
                 </ul>
                 <hr>
-                <p class="weather-details-title">Weather Details</p>
+                <p class="sidebar-title">Weather Details</p>
                 <table class="weather-details">
                     <tr>
                         <td>Sunrise</td>
@@ -54,6 +53,29 @@
                     </tr>
                 </table>
                 <hr>
+                <p class="sidebar-title">Next days</p>
+                <table class="weather-week-overview" id="-week-overview">
+                    <!-- <tr>
+                        <td>Monday</td>
+                        <td id="current-weather-sunrise">7°</td>
+                    </tr>
+                    <tr>
+                        <td>Tuesday</td>
+                        <td id="current-weather-sunset">9°</td>
+                    </tr>
+                    <tr>
+                        <td>Wednesday</td>
+                        <td id="current-weather-humidity">5°</td>
+                    </tr>
+                    <tr>
+                        <td>Thursday</td>
+                        <td id="current-weather-wind">6°</td>
+                    </tr>
+                    <tr>
+                        <td>Friday</td>
+                        <td id="current-weather-pressure">11°</td>
+                    </tr> -->
+                </table>
             </div>
         </div>
         <div class="weather-container-inner">

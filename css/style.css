@@ -11,6 +11,7 @@
   background-position: 0% 100%;
   width: 100vw;
   height: 100vh;
+  background-image: url("./Images/clouds.jpg");
 }
 
 .background-body-one {
@@ -102,18 +103,11 @@ body {
   width: 350px;
   height: 100vh;
   backdrop-filter: blur(10px);
+  background-color: #0c0c0c5e;
 }
 
 .sidebar-inner {
   padding: 50px;
-}
-
-.sidebar-background {
-  position: absolute;
-  background-color: #0c0c0c5e;
-  z-index: -1;
-  width: 350px;
-  height: calc(100vh);
 }
 
 .searchbox {
@@ -122,9 +116,7 @@ body {
   background: none;
   color: var(--primary-text-color);
 }
-
 .search-button {
-  color: white;
   background: none;
   border: none;
   padding: 0px;
@@ -156,28 +148,75 @@ hr {
   cursor: pointer;
 }
 
-.weather-details-title {
+.sidebar-title {
   padding-top: 15px;
   font-size: 1.1rem;
   font-family: "Oxygen Bold", sans-serif;
   font-weight: 600;
 }
 
-.weather-details {
+.weather-details,
+.weather-week-overview {
   width: 100%;
   padding-bottom: 15px;
 }
 
-.weather-details > tbody > tr > td {
+.weather-details > tbody > tr > td,
+.weather-week-overview > tbody > tr > td {
   padding: 10px 0px;
 }
 
-.weather-details > tbody > tr > td:last-child {
+.weather-details > tbody > tr > td:last-child,
+.weather-week-overview > tbody > tr > td:last-child {
   text-align: end;
 }
 
 @media only screen and (max-width: 600px) {
   .weather-container {
     flex-direction: column;
+  }
+}
+
+.error {
+  outline: 0;
+  color: red;
+  animation-name: bounce;
+  animation-duration: 0.5s;
+  animation-delay: 0.05s;
+}
+
+/* Animation for the search box to play on error.*/
+@keyframes bounce {
+  0% {
+    transform: translateX(0px);
+    timing-function: ease-in;
+  }
+  37% {
+    transform: translateX(7px);
+    timing-function: ease-out;
+  }
+  55% {
+    transform: translateX(-7px);
+    timing-function: ease-in;
+  }
+  73% {
+    transform: translateX(5px);
+    timing-function: ease-out;
+  }
+  82% {
+    transform: translateX(-5px);
+    timing-function: ease-in;
+  }
+  91% {
+    transform: translateX(3px);
+    timing-function: ease-out;
+  }
+  96% {
+    transform: translateX(-3px);
+    timing-function: ease-in;
+  }
+  100% {
+    transform: translateX(0px);
+    timing-function: ease-in;
   }
 }
