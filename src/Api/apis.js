@@ -16,9 +16,15 @@ const unsplashAPI = axios.create({
   },
 });
 
-function getCurrentWeatherDataForLocation(location) {
-  return openWeatherMapAPI.get(
+async function getCurrentWeatherDataForLocation(location) {
+  return await openWeatherMapAPI.get(
     `/weather?q=${location}&units=metric&appid=${WEATHER_CONFIG.openWeatherMapApiKey}`
+  );
+}
+
+async function getWeeklyWeatherData(lat, long) {
+  return await openWeatherMapAPI.get(
+    `/onecall?lat=${lat}&lon=${long}&exclude=minutely,hourly,alerts&units=metric&appid=${WEATHER_CONFIG.openWeatherMapApiKey}`
   );
 }
 
@@ -39,4 +45,9 @@ async function getPicture(location, nrOfPictures) {
   return response.data.results;
 }
 
-export { getCurrentWeatherDataForLocation, getAddressFromLatLng, getPicture };
+export {
+  getCurrentWeatherDataForLocation,
+  getWeeklyWeatherData,
+  getAddressFromLatLng,
+  getPicture,
+};

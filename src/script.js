@@ -1,10 +1,12 @@
 import {
   getCurrentWeatherDataForLocation,
+  getWeeklyWeatherData,
   getAddressFromLatLng,
   getPicture,
 } from "./Api/apis.js";
 (() => {
   const NR_OF_LOCATIONS_IN_HISTORY = 3;
+  const NR_OF_DAYS_TO_FORECAST = 5;
   let imgBackgroundLoader = new Image();
   let lastLocation = "";
   let lastBackgroundUrl = "";
@@ -13,6 +15,7 @@ import {
   let cityInput = document.getElementById("location-input");
   let backgroundOneElement = document.getElementById("background-one");
   let backgroundTwoElement = document.getElementById("background-two");
+  let weekOverview = document.getElementById("week-overview");
 
   //Define all elements holding data in a single object so we can edit easily later.
   let weatherElements = {
@@ -111,9 +114,9 @@ import {
    */
   const setWeatherData = (weatherData) => {
     /*Weather details */
-    let sunriseDateTime = new Date(weatherData.sys.sunrise * 1000);
-    let sunsetDateTime = new Date(weatherData.sys.sunset * 1000);
-    let dateTime = new Date(weatherData.dt * 1000);
+    let sunriseDateTime = new Date(weatherData.current.sunrise * 1000);
+    let sunsetDateTime = new Date(weatherData.current.sunset * 1000);
+    let dateTime = new Date(weatherData.current.dt * 1000);
     let timeOptions = {
       hour: "numeric",
       minute: "numeric",
@@ -148,15 +151,45 @@ import {
       undefined,
       timeOptions
     )}`;
-    weatherElements["humidity"].innerHTML = `${weatherData.main.humidity}%`;
-    weatherElements["wind"].innerHTML = `${weatherData.wind.speed}km/h`;
-    weatherElements["pressure"].innerHTML = `${weatherData.main.pressure} hPa`;
-    weatherElements["temp"].innerHTML = `${parseInt(weatherData.main.temp)}°`;
+    weatherElements["humidity"].innerHTML = `${weatherData.current.humidity} %`;
+    weatherElements[
+      "wind"
+    ].innerHTML = `${weatherData.current.wind_speed} km/h`;
+    weatherElements[
+      "pressure"
+    ].innerHTML = `${weatherData.current.pressure} hPa`;
+    weatherElements["temp"].innerHTML = `${parseInt(
+      weatherData.current.temp
+    )}°`;
     weatherElements["city"].innerHTML = weatherData.name;
     weatherElements["description"].innerHTML =
-      weatherData.weather[0].description;
+      weatherData.current.weather[0].description;
     weatherElements["time"].innerHTML = formattedTime;
     weatherElements["date"].innerHTML = formattedDate;
+
+    //TODO: Add next day weather info.
+    setNextDaysWeather(weatherData.daily);
+  };
+
+  const setNextDaysWeather = (weatherData) => {
+    let nrOfItems = Math.min(NR_OF_DAYS_TO_FORECAST, weatherData.length);
+
+    weekOverview.innerHTML = ""; //remove children
+    for (let i = 0; i < nrOfItems; i++) {
+      //get weekday name, temp, icon
+      let weekday = new Date(
+        weatherData[i].dt * 1000
+      ).toLocaleDateString(undefined, { weekday: "long" });
+      let temp = weatherData[i].temp.day;
+      let iconCode = weatherData[i].weather[0].icon;
+
+      //Create element
+
+      let row = weekOverview.insertRow();
+      row.insertCell().innerHTML = weekday;
+      row.insertCell().innerHTML = `${temp} °`;
+      //TODO: add image
+    }
   };
 
   const addWeatherLocation = (newLocation) => {
@@ -212,16 +245,23 @@ import {
   const updatePage = async (location) => {
     if (location) {
       let weatherDataResponse = undefined;
+      let weeklyWeatherDataResponse = undefined;
       try {
         weatherDataResponse = await getCurrentWeatherDataForLocation(location);
+        //see: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment
+        var { lat, lon } = weatherDataResponse.data.coord;
+        weeklyWeatherDataResponse = await getWeeklyWeatherData(lat, lon);
       } catch (error) {
         console.error(error);
         return false;
       }
       lastLocation = location;
-      setWeatherData(weatherDataResponse.data);
+      setWeatherData({
+        name: weatherDataResponse.data.name,
+        ...weeklyWeatherDataResponse.data,
+      });
 
-      let weatherDescription = `${location} ${weatherDataResponse.data.weather[0].main}`;
+      let weatherDescription = `${weatherDataResponse.data.name} ${weeklyWeatherDataResponse.data.current.weather[0].main}`;
       requestNewBackground(weatherDescription, true);
       return true;
     }
