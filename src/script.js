@@ -1,6 +1,7 @@
 import {
   getCurrentWeatherDataForLocation,
   getWeeklyWeatherData,
+  getWeatherIcon,
   getAddressFromLatLng,
   getPicture,
 } from "./Api/apis.js";
@@ -29,6 +30,7 @@ import {
     description: document.getElementById("current-weather-description"),
     time: document.getElementById("current-weather-time"),
     date: document.getElementById("current-weather-date"),
+    icon: document.getElementById("current-weather-icon"),
   };
 
   /**
@@ -166,6 +168,9 @@ import {
       weatherData.current.weather[0].description;
     weatherElements["time"].innerHTML = formattedTime;
     weatherElements["date"].innerHTML = formattedDate;
+    weatherElements["icon"].src = getWeatherIcon(
+      weatherData.current.weather[0].icon
+    );
 
     //TODO: Add next day weather info.
     setNextDaysWeather(weatherData.daily);
@@ -188,7 +193,13 @@ import {
       let row = weekOverview.insertRow();
       row.insertCell().innerHTML = weekday;
       row.insertCell().innerHTML = `${temp} °`;
-      //TODO: add image
+
+      //Add weather icon
+      var weatherImg = document.createElement("img");
+      weatherImg.width = 24;
+      weatherImg.height = 24;
+      weatherImg.src = getWeatherIcon(iconCode);
+      row.insertCell().appendChild(weatherImg);
     }
   };
 

@@ -16,6 +16,7 @@ const unsplashAPI = axios.create({
   },
 });
 
+/*Weather API Calls */
 async function getCurrentWeatherDataForLocation(location) {
   return await openWeatherMapAPI.get(
     `/weather?q=${location}&units=metric&appid=${WEATHER_CONFIG.openWeatherMapApiKey}`
@@ -28,6 +29,12 @@ async function getWeeklyWeatherData(lat, long) {
   );
 }
 
+function getWeatherIcon(iconCode) {
+  const openWeatherMapImgBaseUrl = " http://openweathermap.org/img/wn/";
+  return `${openWeatherMapImgBaseUrl}${iconCode}@2x.png`;
+}
+
+/*Reverse Geocoding API Calls */
 async function getAddressFromLatLng(lat, lng) {
   //https://maps.googleapis.com/maps/api/geocode/json?latlng=40.714224,-73.961452&key=API_KEY
   var response = await openCageDataAPI.get(
@@ -37,6 +44,7 @@ async function getAddressFromLatLng(lat, lng) {
   return response.data.results[0];
 }
 
+/*Unsplash API calls */
 async function getPicture(location, nrOfPictures) {
   var response = await unsplashAPI.get(
     `/search/photos?query=${location}&per_page=${nrOfPictures}&orientation=landscape`
@@ -48,6 +56,7 @@ async function getPicture(location, nrOfPictures) {
 export {
   getCurrentWeatherDataForLocation,
   getWeeklyWeatherData,
+  getWeatherIcon,
   getAddressFromLatLng,
   getPicture,
 };
