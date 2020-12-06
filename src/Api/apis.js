@@ -1,51 +1,34 @@
 //File containing a json obj called WEATHER_CONFIG with my api key.
-import { WEATHER_CONFIG, UNSPLASH_CONFIG } from "../config.js";
 
-const openWeatherMapAPI = axios.create({
-  baseURL: "https://api.openweathermap.org/data/2.5",
-});
-
-const openCageDataAPI = axios.create({
-  baseURL: "https://api.opencagedata.com/geocode/v1",
-});
-
-const unsplashAPI = axios.create({
-  baseURL: "https://api.unsplash.com/",
-  headers: {
-    Authorization: `Client-ID ${UNSPLASH_CONFIG.accessKey}`, //the token is a variable which holds the token
-  },
+const vercelServerlessAPI = axios.create({
+  baseURL: "https://weather-app.renv123.vercel.app/api/",
 });
 
 /*Weather API Calls */
 async function getCurrentWeatherDataForLocation(location) {
-  return await openWeatherMapAPI.get(
-    `/weather?q=${location}&units=metric&appid=${WEATHER_CONFIG.openWeatherMapApiKey}`
+  return await vercelServerlessAPI.get(
+    `/weather-for-location?location=${location}`
   );
 }
 
 async function getWeeklyWeatherData(lat, long) {
-  return await openWeatherMapAPI.get(
-    `/onecall?lat=${lat}&lon=${long}&exclude=minutely,hourly,alerts&units=metric&appid=${WEATHER_CONFIG.openWeatherMapApiKey}`
+  return await vercelServerlessAPI.get(
+    `/weather-for-week?lat=${lat}&lon=${lon}`
   );
 }
 
 /*Reverse Geocoding API Calls */
 async function getAddressFromLatLng(lat, lng) {
-  //https://maps.googleapis.com/maps/api/geocode/json?latlng=40.714224,-73.961452&key=API_KEY
-  var response = await openCageDataAPI.get(
-    `/json?q=${lat}+${lng}&key=${WEATHER_CONFIG.openCageDataAPiKey}`
+  return await vercelServerlessAPI.get(
+    `/reverse-geocode?lat=${lat}&lon=${lon}`
   );
-  //TODO: add some validation
-  return response.data.results[0];
 }
 
 /*Unsplash API calls */
-async function getPicture(location, nrOfPictures) {
-  var response = await unsplashAPI.get(
-    `/search/photos?query=${location}&per_page=${nrOfPictures}&orientation=landscape`
+async function getPicture(queryTerm, nrOfPictures) {
+  return await vercelServerlessAPI.get(
+    `/picture?query=${queryTerm}&nr${nrOfPictures}`
   );
-  //TODO: add some validation
-  return response.data.results;
 }
 
 export {
