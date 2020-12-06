@@ -6,15 +6,17 @@ const vercelServerlessAPI = axios.create({
 
 /*Weather API Calls */
 async function getCurrentWeatherDataForLocation(location) {
-  return await vercelServerlessAPI.get(
+  let response = await vercelServerlessAPI.get(
     `/weather-for-location?location=${location}`
   );
+  return response.data;
 }
 
 async function getWeeklyWeatherData(lat, long) {
-  return await vercelServerlessAPI.get(
+  let response = await vercelServerlessAPI.get(
     `/weather-for-week?lat=${lat}&lon=${lon}`
   );
+  return response.data;
 }
 
 /*Reverse Geocoding API Calls */
@@ -27,9 +29,10 @@ async function getAddressFromLatLng(lat, lng) {
 
 /*Unsplash API calls */
 async function getPicture(queryTerm, nrOfPictures) {
-  return await vercelServerlessAPI.get(
+  let response = await vercelServerlessAPI.get(
     `/picture?query=${queryTerm}&nr${nrOfPictures}`
   );
+  return response.data;
 }
 
 export {
