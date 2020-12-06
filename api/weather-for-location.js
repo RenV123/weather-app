@@ -1,4 +1,3 @@
-import Status from 'http-status-codes';
 require("dotenv").config();
 const axios = require("axios");
 
@@ -14,9 +13,8 @@ async function getCurrentWeatherDataForLocation(location) {
 }
 
 export default (request, response) => {
-    if (request.method !== 'GET') {
-      return response.status(Status.BAD_REQUEST).send('');
+    if (request.method === 'GET') {
+        const location = request?.query?.location;
+        return await getCurrentWeatherDataForLocation(location);
     }
-    const location = request?.query?.location;
-    return await getCurrentWeatherDataForLocation(location);
 };
