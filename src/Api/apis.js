@@ -29,11 +29,6 @@ async function getWeeklyWeatherData(lat, long) {
   );
 }
 
-function getWeatherIcon(iconCode) {
-  const openWeatherMapImgBaseUrl = " http://openweathermap.org/img/wn/";
-  return `${openWeatherMapImgBaseUrl}${iconCode}@2x.png`;
-}
-
 /*Reverse Geocoding API Calls */
 async function getAddressFromLatLng(lat, lng) {
   //https://maps.googleapis.com/maps/api/geocode/json?latlng=40.714224,-73.961452&key=API_KEY
@@ -56,7 +51,6 @@ async function getPicture(location, nrOfPictures) {
 export {
   getCurrentWeatherDataForLocation,
   getWeeklyWeatherData,
-  getWeatherIcon,
   getAddressFromLatLng,
   getPicture,
 };

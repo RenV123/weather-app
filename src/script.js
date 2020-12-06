@@ -1,7 +1,6 @@
 import {
   getCurrentWeatherDataForLocation,
   getWeeklyWeatherData,
-  getWeatherIcon,
   getAddressFromLatLng,
   getPicture,
 } from "./Api/apis.js";
@@ -168,9 +167,13 @@ import {
       weatherData.current.weather[0].description;
     weatherElements["time"].innerHTML = formattedTime;
     weatherElements["date"].innerHTML = formattedDate;
-    weatherElements["icon"].src = getWeatherIcon(
+
+    /*weatherElements["icon"].src = getWeatherIcon(
       weatherData.current.weather[0].icon
-    );
+    );*/
+    weatherElements[
+      "icon"
+    ].className = `weather-icon owf owf-${weatherData.current.weather[0].id} owf-5x`;
 
     //TODO: Add next day weather info.
     setNextDaysWeather(weatherData.daily);
@@ -186,7 +189,7 @@ import {
         weatherData[i].dt * 1000
       ).toLocaleDateString(undefined, { weekday: "long" });
       let temp = weatherData[i].temp.day;
-      let iconCode = weatherData[i].weather[0].icon;
+      let iconCode = weatherData[i].weather[0].id;
 
       //Create element
 
@@ -195,11 +198,9 @@ import {
       row.insertCell().innerHTML = `${temp} °`;
 
       //Add weather icon
-      var weatherImg = document.createElement("img");
-      weatherImg.width = 24;
-      weatherImg.height = 24;
-      weatherImg.src = getWeatherIcon(iconCode);
-      row.insertCell().appendChild(weatherImg);
+      var weatherIcon = document.createElement("i");
+      weatherIcon.className = `owf owf-${iconCode} owf-1x`;
+      row.insertCell().appendChild(weatherIcon);
     }
   };
 
