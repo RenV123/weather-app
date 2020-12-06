@@ -1,7 +1,6 @@
 require("dotenv").config();
 const axios = require("axios");
 
-
 const openWeatherMapAPI = axios.create({
   baseURL: "https://api.openweathermap.org/data/2.5",
 });
@@ -12,9 +11,14 @@ async function getCurrentWeatherDataForLocation(location) {
   );
 }
 
-export default (request, response) => {
-    if (request.method === 'GET') {
-        const location = request?.query?.location;
-        return await getCurrentWeatherDataForLocation(location);
-    }
+module.exports = async (request, response) => {
+  try {
+    const location = request?.query?.location;
+    return await getCurrentWeatherDataForLocation(location);
+  } catch (err) {
+    res.send({
+      status: 500,
+      message: err.message,
+    });
+  }
 };
