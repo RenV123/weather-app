@@ -13,7 +13,7 @@ async function getCurrentWeatherDataForLocation(location) {
 
 module.exports = async (request, response) => {
   try {
-    const location = request?.query?.location;
+    const location = request.query.location;
     return await getCurrentWeatherDataForLocation(location);
   } catch (err) {
     res.send({
