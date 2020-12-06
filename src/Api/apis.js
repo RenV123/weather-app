@@ -20,9 +20,9 @@ async function getWeeklyWeatherData(lat, lon) {
 }
 
 /*Reverse Geocoding API Calls */
-async function getAddressFromLatLng(lat, lng) {
+async function getAddressFromLatLng(lat, lon) {
   let response = await vercelServerlessAPI.get(
-    `/reverse-geocode?lat=${lat}&lon=${lng}`
+    `/reverse-geocode?lat=${lat}&lon=${lon}`
   );
   return response.data;
 }
