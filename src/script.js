@@ -180,10 +180,10 @@ import {
   };
 
   const setNextDaysWeather = (weatherData) => {
-    let nrOfItems = Math.min(NR_OF_DAYS_TO_FORECAST, weatherData.length);
+    let nrOfItems = Math.min(NR_OF_DAYS_TO_FORECAST + 1, weatherData.length);
 
     weekOverview.innerHTML = ""; //remove children
-    for (let i = 0; i < nrOfItems; i++) {
+    for (let i = 1; i < nrOfItems; i++) {
       //get weekday name, temp, icon
       let weekday = new Date(
         weatherData[i].dt * 1000
