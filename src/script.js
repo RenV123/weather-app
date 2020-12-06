@@ -174,7 +174,6 @@ import {
       "icon"
     ].className = `weather-icon owf owf-${weatherData.current.weather[0].id} owf-5x`;
 
-    //TODO: Add next day weather info.
     setNextDaysWeather(weatherData.daily);
   };
 
@@ -289,6 +288,7 @@ import {
       position.coords.longitude
     );
 
+    addWeatherLocation(response.components.city);
     updatePage(response.components.city);
   };
 
