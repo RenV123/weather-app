@@ -12,7 +12,7 @@ async function getAddressFromLatLng(lat, lng) {
     `/json?q=${lat}+${lng}&key=${process.env.OPEN_CAGE_DATA_API_KEY}`
   );
   //TODO: add some validation
-  return response.data.results[0];
+  return response.data;
 }
 
 module.exports = async (request, response) => {
@@ -23,7 +23,7 @@ module.exports = async (request, response) => {
     );
     response.send({
       status: 200,
-      components: addressResponse.components,
+      data: addressResponse,
     });
   } catch (err) {
     response.send({
