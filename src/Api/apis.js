@@ -12,7 +12,7 @@ async function getCurrentWeatherDataForLocation(location) {
   return response.data;
 }
 
-async function getWeeklyWeatherData(lat, long) {
+async function getWeeklyWeatherData(lat, lon) {
   let response = await vercelServerlessAPI.get(
     `/weather-for-week?lat=${lat}&lon=${lon}`
   );
