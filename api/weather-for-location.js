@@ -14,12 +14,12 @@ async function getCurrentWeatherDataForLocation(location) {
 module.exports = async (request, response) => {
   try {
     const location = request.query.location;
-    res.send({
+    response.send({
       status: 500,
       data: await getCurrentWeatherDataForLocation(location),
     });
   } catch (err) {
-    res.send({
+    response.send({
       status: 500,
       message: err.message,
     });
