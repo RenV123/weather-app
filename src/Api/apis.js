@@ -30,7 +30,7 @@ async function getAddressFromLatLng(lat, lon) {
 /*Unsplash API calls */
 async function getPicture(queryTerm, nrOfPictures) {
   let response = await vercelServerlessAPI.get(
-    `/picture?query=${queryTerm}&nr${nrOfPictures}`
+    `/picture?query=${queryTerm}&nr=${nrOfPictures}`
   );
   return response.data.results;
 }
