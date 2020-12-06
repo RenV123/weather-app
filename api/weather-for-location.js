@@ -15,7 +15,7 @@ module.exports = async (request, response) => {
   try {
     const location = request.query.location;
     response.send({
-      status: 500,
+      status: 200,
       data: await getCurrentWeatherDataForLocation(location),
     });
   } catch (err) {
