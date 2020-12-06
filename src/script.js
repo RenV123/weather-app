@@ -74,7 +74,6 @@ import {
   const setBackground = (url) => {
     //Don't do anything if there's a background still loading.
     if (isBackgroundLoading) {
-      console.log(`Skipped loading bg: ${url}`);
       return;
     }
     let isBackgroundOneLarger =

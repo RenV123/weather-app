@@ -1,6 +1,7 @@
 :root {
   --primary-text-color: #fff;
   --devider-color: #ffffff9d;
+  --sidebar-element-padding: max(10px, 1.4vh);
 }
 
 .background-body-two {
@@ -59,7 +60,7 @@ body {
 }
 
 .weather-container-inner {
-  margin: 150px 150px;
+  margin: max(50px, 10vw);
   display: flex;
   flex-direction: column;
   flex-grow: 2;
@@ -104,18 +105,24 @@ body {
   height: 100vh;
   backdrop-filter: blur(10px);
   background-color: #0c0c0c5e;
+  overflow: auto;
 }
 
 .sidebar-inner {
-  padding: 50px;
+  padding: min(4vh, 50px);
 }
-
+.searchbox-container {
+  display: flex;
+  justify-content: space-between;
+}
 .searchbox {
   border-width: 0px;
   border-style: none;
   background: none;
   color: var(--primary-text-color);
+  outline: none;
 }
+
 .search-button {
   background: none;
   border: none;
@@ -123,7 +130,6 @@ body {
 }
 
 .search-button > img {
-  padding-left: 60px;
   width: 20px;
   color: var(--primary-text-color);
 }
@@ -138,18 +144,18 @@ hr {
 
 .common-picked-locations {
   list-style-type: none;
-  padding: 5px 0px;
+  padding: 0px;
 }
 
 .common-picked-locations > li {
-  padding: 15px 0px;
+  padding: var(--sidebar-element-padding) 0px;
 }
 .common-picked-locations > li:hover {
   cursor: pointer;
 }
 
 .sidebar-title {
-  padding-top: 15px;
+  padding-top: var(--sidebar-element-padding);
   font-size: 1.1rem;
   font-family: "Oxygen Bold", sans-serif;
   font-weight: 600;
@@ -158,12 +164,11 @@ hr {
 .weather-details,
 .weather-week-overview {
   width: 100%;
-  padding-bottom: 15px;
 }
 
 .weather-details > tbody > tr > td,
 .weather-week-overview > tbody > tr > td {
-  padding: 10px 0px;
+  padding: var(--sidebar-element-padding) 0px;
 }
 
 .weather-details > tbody > tr > td:last-child,
