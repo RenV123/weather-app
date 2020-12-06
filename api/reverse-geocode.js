@@ -12,7 +12,7 @@ async function getAddressFromLatLng(lat, lng) {
     `/json?q=${lat}+${lng}&key=${process.env.OPEN_CAGE_DATA_API_KEY}`
   );
   //TODO: add some validation
-  return response.data;
+  return response.data.results[0];
 }
 
 module.exports = async (request, response) => {
