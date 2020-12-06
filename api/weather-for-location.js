@@ -14,9 +14,12 @@ async function getCurrentWeatherDataForLocation(location) {
 module.exports = async (request, response) => {
   try {
     const location = request.query.location;
+    const weatherDataResponse = await getCurrentWeatherDataForLocation(
+      location
+    );
     response.send({
       status: 200,
-      data: await getCurrentWeatherDataForLocation(location),
+      data: weatherDataResponse.data,
     });
   } catch (err) {
     response.send({
