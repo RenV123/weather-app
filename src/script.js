@@ -259,7 +259,7 @@ import {
       try {
         weatherDataResponse = await getCurrentWeatherDataForLocation(location);
         //see: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment
-        var { lat, lon } = weatherDataResponse.data.coord;
+        var { lat, lon } = weatherDataResponse.coord;
         weeklyWeatherDataResponse = await getWeeklyWeatherData(lat, lon);
       } catch (error) {
         console.error(error);
@@ -267,11 +267,11 @@ import {
       }
       lastLocation = location;
       setWeatherData({
-        name: weatherDataResponse.data.name,
-        ...weeklyWeatherDataResponse.data,
+        name: weatherDataResponse.name,
+        ...weeklyWeatherDataResponse,
       });
 
-      let weatherDescription = `${weatherDataResponse.data.name} ${weeklyWeatherDataResponse.data.current.weather[0].main}`;
+      let weatherDescription = `${weatherDataResponse.name} ${weeklyWeatherDataResponse.current.weather[0].main}`;
       requestNewBackground(weatherDescription, true);
       return true;
     }
