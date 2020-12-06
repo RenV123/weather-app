@@ -32,7 +32,7 @@ async function getPicture(queryTerm, nrOfPictures) {
   let response = await vercelServerlessAPI.get(
     `/picture?query=${queryTerm}&nr${nrOfPictures}`
   );
-  return response.data;
+  return response.data.results;
 }
 
 export {

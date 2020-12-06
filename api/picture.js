@@ -14,7 +14,7 @@ async function getPicture(query, nrOfPictures) {
     `/search/photos?query=${query}&per_page=${nrOfPictures}&orientation=landscape`
   );
   //TODO: add some validation
-  return response.data.results;
+  return response.data;
 }
 
 module.exports = async (request, response) => {
