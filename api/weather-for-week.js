@@ -18,8 +18,7 @@ module.exports = async (request, response) => {
       request.query.lon
     );
     response.send({
-      status: 200,
-      data: weatherDataResponse.data,
+      ...weatherDataResponse.data,
     });
   } catch (err) {
     response.send({

@@ -24,8 +24,7 @@ module.exports = async (request, response) => {
       request.query.nr
     );
     response.send({
-      status: 200,
-      results: picturesResponse,
+      ...picturesResponse,
     });
   } catch (err) {
     response.send({

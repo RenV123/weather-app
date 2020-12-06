@@ -22,7 +22,6 @@ module.exports = async (request, response) => {
       request.query.lon
     );
     response.send({
-      status: 200,
       ...addressResponse,
     });
   } catch (err) {
