@@ -23,7 +23,7 @@ module.exports = async (request, response) => {
     );
     response.send({
       status: 200,
-      data: addressResponse,
+      ...addressResponse,
     });
   } catch (err) {
     response.send({
