@@ -1,8 +1,8 @@
 module.exports = async (request, response) => {
-  console.log(request.body);
+  console.log(request.headers);
   try {
     response.send({
-      request: request.body,
+      request: request.headers,
     });
   } catch (err) {
     response.send({
