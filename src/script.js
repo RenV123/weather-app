@@ -4,9 +4,11 @@ import {
   getAddressFromLatLng,
   getPicture,
 } from "./Api/apis.js";
+
 (() => {
   const NR_OF_LOCATIONS_IN_HISTORY = 3;
   const NR_OF_DAYS_TO_FORECAST = 5;
+
   let imgBackgroundLoader = new Image();
   let lastLocation = "";
   let lastBackgroundUrl = "";
@@ -113,17 +115,19 @@ import {
    * @param {object} weatherData
    */
   const setWeatherData = (weatherData) => {
-    /*Weather details */
+    //Create dates from unix timestamps.
     let sunriseDateTime = new Date(weatherData.current.sunrise * 1000);
     let sunsetDateTime = new Date(weatherData.current.sunset * 1000);
     let dateTime = new Date(weatherData.current.dt * 1000);
+
+    //Create time formatting options
+    //see: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat
     let timeOptions = {
       hour: "numeric",
       minute: "numeric",
       hour12: true,
     };
 
-    //ref: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat
     const dateTimeOptions = {
       weekday: "long",
       day: "numeric",
@@ -131,13 +135,17 @@ import {
       year: "numeric",
     };
 
-    //Show the current time with AM slightly smaller
+    //Use current time and split it into two parts. 'HH:MM' and am/pm part.
     let currentTimeParts = new Date()
       .toLocaleString(undefined, timeOptions)
       .split(" ");
+
+    //Show the current time (HH:MM) with am in slightly smaller font.
     let formattedTime = `${currentTimeParts[0]} ${currentTimeParts[1].fontsize(
       6
     )}`;
+
+    //Format date into string
     let formattedDate = new Intl.DateTimeFormat(
       undefined,
       dateTimeOptions
@@ -167,9 +175,6 @@ import {
     weatherElements["time"].innerHTML = formattedTime;
     weatherElements["date"].innerHTML = formattedDate;
 
-    /*weatherElements["icon"].src = getWeatherIcon(
-      weatherData.current.weather[0].icon
-    );*/
     weatherElements[
       "icon"
     ].className = `weather-icon owf owf-${weatherData.current.weather[0].id} owf-5x`;
@@ -177,6 +182,10 @@ import {
     setNextDaysWeather(weatherData.daily);
   };
 
+  /**
+   * Sets the weather data of the following days in a table in the sidebar.
+   * @param {object} weatherData
+   */
   const setNextDaysWeather = (weatherData) => {
     let nrOfItems = Math.min(NR_OF_DAYS_TO_FORECAST + 1, weatherData.length);
 
@@ -202,6 +211,10 @@ import {
     }
   };
 
+  /**
+   * Adds a location to a list of recently searched locations.
+   * @param {string} newLocation
+   */
   const addWeatherLocation = (newLocation) => {
     //TODO: Store these locations in a cookie
     //Get all locations
@@ -210,14 +223,16 @@ import {
     );
     //Confirm new location is not in it yet.
     let isInList =
-      locationElements.find((element) => element.innerHTML == newLocation) !==
-      undefined;
+      locationElements.find(
+        (element) =>
+          element.innerHTML.toLowerCase() == newLocation.toLowerCase()
+      ) !== undefined;
     if (!isInList) {
       //Add new location
       let locationsContainer = document.getElementById("weather-locations");
       var li = document.createElement("li");
       li.appendChild(document.createTextNode(newLocation));
-      li.onclick = onListElementClick;
+      li.onclick = onWeatherListElementClick;
       locationsContainer.insertBefore(li, locationsContainer.firstChild);
 
       //Check if amount of locations is not higher then max
@@ -292,6 +307,10 @@ import {
     updatePage(response.components.city);
   };
 
+  /**
+   * Called whenever the user denies the location request.
+   * @param {string} error
+   */
   const onUserLocationDenied = (error) => {
     console.error(error);
   };
@@ -332,16 +351,20 @@ import {
     }
   };
 
-  function onListElementClick() {
+  /**
+   * Callback whenever a user clicks on a weather location element.
+   */
+  function onWeatherListElementClick() {
     cityInput.value = "";
     updatePage(this.innerHTML);
   }
 
-  /* Add Event Listeners*/
+  /* Add Event Listeners */
   document
     .getElementById("search-weather-button")
     .addEventListener("click", onSubmit);
   cityInput.addEventListener("submit", onSubmit);
+
   cityInput.addEventListener("keyup", (event) => {
     if (event.key === "Enter") {
       onSubmit(event);
@@ -350,7 +373,7 @@ import {
 
   Array.from(document.querySelectorAll("#weather-locations > li")).forEach(
     (liElement) => {
-      liElement.addEventListener("click", onListElementClick);
+      liElement.addEventListener("click", onWeatherListElementClick);
     }
   );
 
