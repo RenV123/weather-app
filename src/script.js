@@ -118,9 +118,11 @@ import {
       lowerBg.style.backgroundImage = `url('${imgBackgroundLoader.src}')`;
       var currentOpacity = 1.0;
       isBackgroundLoading = true;
+
       lowerOpacityInterval = setInterval(() => {
         currentOpacity -= 0.05;
         upperBg.style.opacity = `${currentOpacity}`;
+
         if (currentOpacity <= 0) {
           lowerBg.style.zIndex = "-1"; //lower is now upper
           upperBg.style.zIndex = "-2";
@@ -130,6 +132,7 @@ import {
         }
       }, 50); //total transition time 1 sec
     };
+
     imgBackgroundLoader.src = url;
     lastBackgroundUrl = url;
   };
@@ -138,15 +141,25 @@ import {
    * Fills in the weather elements of the page based on the weather data.
    * @param {object} weatherData
    */
-  const setWeatherData = (weatherData) => {
+  const setAllWeatherData = (weatherData) => {
+    setCurrentWeatherData(weatherData.name, weatherData.current);
+    setNextDaysWeather(weatherData.daily);
+  };
+
+  /**
+   * Sets the weather data of the current day.
+   * @param {string} name name of the city
+   * @param {object} weatherData
+   */
+  const setCurrentWeatherData = (name, weatherData) => {
     //Create dates from unix timestamps.
-    let sunriseDateTime = new Date(weatherData.current.sunrise * 1000);
-    let sunsetDateTime = new Date(weatherData.current.sunset * 1000);
-    let dateTime = new Date(weatherData.current.dt * 1000);
+    let sunriseDateTime = new Date(weatherData.sunrise * 1000);
+    let sunsetDateTime = new Date(weatherData.sunset * 1000);
+    let dateTime = new Date(weatherData.dt * 1000);
 
     //Create time formatting options
     //see: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat
-    let timeOptions = {
+    const timeOptions = {
       hour: "numeric",
       minute: "numeric",
       hour12: true,
@@ -183,27 +196,19 @@ import {
       undefined,
       timeOptions
     )}`;
-    weatherElements["humidity"].innerHTML = `${weatherData.current.humidity} %`;
-    weatherElements[
-      "wind"
-    ].innerHTML = `${weatherData.current.wind_speed} km/h`;
-    weatherElements[
-      "pressure"
-    ].innerHTML = `${weatherData.current.pressure} hPa`;
-    weatherElements["temp"].innerHTML = `${parseInt(
-      weatherData.current.temp
-    )}°`;
-    weatherElements["city"].innerHTML = weatherData.name;
+    weatherElements["humidity"].innerHTML = `${weatherData.humidity} %`;
+    weatherElements["wind"].innerHTML = `${weatherData.wind_speed} km/h`;
+    weatherElements["pressure"].innerHTML = `${weatherData.pressure} hPa`;
+    weatherElements["temp"].innerHTML = `${parseInt(weatherData.temp)}°`;
+    weatherElements["city"].innerHTML = name;
     weatherElements["description"].innerHTML =
-      weatherData.current.weather[0].description;
+      weatherData.weather[0].description;
     weatherElements["time"].innerHTML = formattedTime;
     weatherElements["date"].innerHTML = formattedDate;
 
     weatherElements[
       "icon"
-    ].className = `weather-icon owf owf-${weatherData.current.weather[0].id} owf-5x`;
-
-    setNextDaysWeather(weatherData.daily);
+    ].className = `weather-icon owf owf-${weatherData.weather[0].id} owf-5x`;
   };
 
   /**
@@ -240,11 +245,13 @@ import {
    */
   const generateTableRow = (table, data) => {
     let row = table.insertRow();
-    for (key in data) {
+
+    Object.values(data).forEach((value) => {
       let cell = row.insertCell();
-      let text = document.createTextNode(element[key]);
+      let text = document.createTextNode(value);
       cell.appendChild(text);
-    }
+    });
+
     return row;
   };
 
@@ -319,7 +326,7 @@ import {
         return false;
       }
       lastLocation = location;
-      setWeatherData({
+      setAllWeatherData({
         name: weatherDataResponse.name,
         ...weeklyWeatherDataResponse,
       });
