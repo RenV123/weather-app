@@ -1,3 +1,5 @@
+"use strict";
+
 import {
   getCurrentWeatherDataForLocation,
   getWeeklyWeatherData,
@@ -18,6 +20,7 @@ import {
   let backgroundOneElement = document.getElementById("background-one");
   let backgroundTwoElement = document.getElementById("background-two");
   let weekOverview = document.getElementById("week-overview");
+  let locationsContainer = document.getElementById("weather-locations");
 
   //Define all elements holding data in a single object so we can edit easily later.
   let weatherElements = {
@@ -45,45 +48,66 @@ import {
 
   /**
    * Uses the API to get a picture and set it as the page background.
-   * @param {string} searchTerm search term to find a matching image for.
+   * @param {String} searchTerm search term to find a matching image for.
    * @param {boolean} isRandom if true, will retrieve up to 5 images and pick a random one.
    */
-  const requestNewBackground = async (searchTerm, isRandom) => {
-    let imageData = await getPicture(
-      `${searchTerm}`,
-      isRandom ? 10 : 0 //if it's random get 10 pictures
-    );
+  const requestNewBackground = async (searchTerm, isRandom = true) => {
+    let imageData = undefined;
+    try {
+      imageData = await getPicture(
+        `${searchTerm}`,
+        isRandom ? 10 : 0 //if it's random get 10 pictures
+      );
+    } catch (error) {
+      console.log(error);
+    }
 
+    let imageUrl = isRandom
+      ? selectRandomBackgroundImage(imageData)
+      : imageData[0].urls.regular;
+
+    setBackground(imageUrl);
+  };
+
+  /**
+   * Selects a random background url from a list of images data objects.
+   * @param {Array.<imageData>} imageData
+   * @returns {String} url of the background.
+   */
+  const selectRandomBackgroundImage = (imageData) => {
     let imageUrl = imageData[0].urls.regular;
-    if (imageData.length > 1 && isRandom) {
+    if (imageData.length > 1) {
       let nr = getRandomNumber(0, imageData.length);
       imageUrl = imageData[nr].urls.regular;
+
+      //if the image is the same pick the next element
       if (imageUrl === lastBackgroundUrl) {
         nr = ++nr % imageData.length;
         imageUrl = imageData[nr].urls.regular;
       }
     }
-    //Use regular sized image for now
-    //TODO: query bg size based on viewport size
-    setBackground(imageUrl);
+    return imageUrl;
   };
 
   /**
    * Loads the background in and once it's loaded creates a transition
    * effect to the new background.
-   * @param {string} url
+   * @param {String} url
    */
   const setBackground = (url) => {
     //Don't do anything if there's a background still loading.
     if (isBackgroundLoading) {
       return;
     }
+
     let isBackgroundOneLarger =
       Number(backgroundOneElement.style.zIndex) >
       Number(backgroundTwoElement.style.zIndex);
+
     let upperBg = isBackgroundOneLarger
       ? backgroundOneElement
       : backgroundTwoElement;
+
     let lowerBg = isBackgroundOneLarger
       ? backgroundTwoElement
       : backgroundOneElement;
@@ -187,6 +211,7 @@ import {
    * @param {object} weatherData
    */
   const setNextDaysWeather = (weatherData) => {
+    //Add +1 because we don't show the current day.
     let nrOfItems = Math.min(NR_OF_DAYS_TO_FORECAST + 1, weatherData.length);
 
     weekOverview.innerHTML = ""; //remove children
@@ -199,12 +224,9 @@ import {
       let iconCode = weatherData[i].weather[0].id;
 
       //Create element
+      let row = generateTableRow(weekOverview, { weekday, temp });
 
-      let row = weekOverview.insertRow();
-      row.insertCell().innerHTML = weekday;
-      row.insertCell().innerHTML = `${temp} °`;
-
-      //Add weather icon
+      //Add weather icon (using owfont)
       var weatherIcon = document.createElement("i");
       weatherIcon.className = `owf owf-${iconCode} owf-1x`;
       row.insertCell().appendChild(weatherIcon);
@@ -212,8 +234,23 @@ import {
   };
 
   /**
+   * Generates a table row based on the values of the data object
+   * @param {HTMLElement} table a table element
+   * @param {object} data an object, the values will be placed in a cell.
+   */
+  const generateTableRow = (table, data) => {
+    let row = table.insertRow();
+    for (key in data) {
+      let cell = row.insertCell();
+      let text = document.createTextNode(element[key]);
+      cell.appendChild(text);
+    }
+    return row;
+  };
+
+  /**
    * Adds a location to a list of recently searched locations.
-   * @param {string} newLocation
+   * @param {String} newLocation
    */
   const addWeatherLocation = (newLocation) => {
     //TODO: Store these locations in a cookie
@@ -221,15 +258,16 @@ import {
     let locationElements = Array.from(
       document.querySelectorAll("#weather-locations > li")
     );
+
     //Confirm new location is not in it yet.
     let isInList =
       locationElements.find(
         (element) =>
           element.innerHTML.toLowerCase() == newLocation.toLowerCase()
       ) !== undefined;
+
     if (!isInList) {
       //Add new location
-      let locationsContainer = document.getElementById("weather-locations");
       var li = document.createElement("li");
       li.appendChild(document.createTextNode(newLocation));
       li.onclick = onWeatherListElementClick;
@@ -264,7 +302,7 @@ import {
    * Updates the page based on the user location.
    * Gets the weather data and displays it
    * Retrieves a matching background based on the weather description.
-   * @param {string} location
+   * @param {String} location
    * @return {boolean} true if the update was successful
    */
   const updatePage = async (location) => {
@@ -298,18 +336,22 @@ import {
    * @param {object} position
    */
   const onUserLocationRetrieved = async (position) => {
-    let response = await getAddressFromLatLng(
-      position.coords.latitude,
-      position.coords.longitude
-    );
+    try {
+      let response = await getAddressFromLatLng(
+        position.coords.latitude,
+        position.coords.longitude
+      );
 
-    addWeatherLocation(response.components.city);
-    updatePage(response.components.city);
+      addWeatherLocation(response.components.city);
+      updatePage(response.components.city);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   /**
    * Called whenever the user denies the location request.
-   * @param {string} error
+   * @param {String} error
    */
   const onUserLocationDenied = (error) => {
     console.error(error);
@@ -320,12 +362,13 @@ import {
    */
   const startPageUpdateInterval = () => {
     /*Update page every minute*/
-    let time = new Date();
-    let secondsTillNextMinute = 60 - time.getSeconds();
-    //Start an interval with the delay of
+    let secondsTillNextMinute = 60 - new Date().getSeconds();
+
+    //Start an interval with the delay
     setTimeout(() => {
       //First time we need to call it manually as the interval will only trigger the next minute.
       updatePage(lastLocation);
+
       setInterval(() => {
         updatePage(lastLocation);
       }, 1000 * 60);
@@ -338,7 +381,8 @@ import {
    */
   const onSubmit = async (event) => {
     event.preventDefault();
-    if (await updatePage(cityInput.value)) {
+    let successfullyUpdated = await updatePage(cityInput.value);
+    if (successfullyUpdated) {
       addWeatherLocation(cityInput.value);
       cityInput.value = "";
     } else {
@@ -365,6 +409,7 @@ import {
     .addEventListener("click", onSubmit);
   cityInput.addEventListener("submit", onSubmit);
 
+  /*Listen to enter key press in input box */
   cityInput.addEventListener("keyup", (event) => {
     if (event.key === "Enter") {
       onSubmit(event);
