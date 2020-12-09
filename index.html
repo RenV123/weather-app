@@ -15,6 +15,8 @@
 
     <!-- My stylesheet -->
     <link rel="stylesheet" href="./css/style.css" type="text/css">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="./src/index.js" type="module"></script>
 </head>
 
 <body>
@@ -24,19 +26,19 @@
         <div class="sidebar">
             <div class="sidebar-inner">
                 <div class="searchbox-container">
-                    <input class="searchbox" type="text" id="location-input" placeholder="Enter location">
+                    <input class="searchbox" type="text" id="location-input" placeholder="Enter location"
+                        list="weather-locations">
+                    <datalist class="form-control" id="weather-locations">
+                        <option value="London" />
+                        <option value="New York" />
+                        <option value="Berlin" />
+                    </datalist>
                     <button class="search-button" id="search-weather-button">
                         <img src="./css/images/search.svg">
                     </button>
                     </input>
                 </div>
                 <hr id="searchbox-underline">
-                <ul class="common-picked-locations" id="weather-locations">
-                    <li>London</li>
-                    <li>New York</li>
-                    <li>Berlin</li>
-                </ul>
-                <hr>
                 <p class="sidebar-title">Weather Details</p>
                 <table class="weather-details">
                     <tr>
@@ -87,8 +89,6 @@
     </div>
 
     <label id="weather-info"></label>
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <script src="./src/script.js" type="module"></script>
 </body>
 
 </html>

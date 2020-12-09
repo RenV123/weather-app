@@ -1,14 +1,6 @@
-"use strict";
-
-import {
-  getCurrentWeatherDataForLocation,
-  getWeeklyWeatherData,
-  getAddressFromLatLng,
-  getPicture,
-} from "./Api/apis.js";
+import * as VercelApi from "./Api/vercelApi.js";
 
 (() => {
-  const NR_OF_LOCATIONS_IN_HISTORY = 3;
   const NR_OF_DAYS_TO_FORECAST = 5;
 
   let imgBackgroundLoader = new Image();
@@ -16,6 +8,7 @@ import {
   let lastBackgroundUrl = "";
   let lowerOpacityInterval = undefined;
   let isBackgroundLoading = false;
+
   let cityInput = document.getElementById("location-input");
   let backgroundOneElement = document.getElementById("background-one");
   let backgroundTwoElement = document.getElementById("background-two");
@@ -54,19 +47,22 @@ import {
   const requestNewBackground = async (searchTerm, isRandom = true) => {
     let imageData = undefined;
     try {
-      imageData = await getPicture(
+      imageData = await VercelApi.getPicture(
         `${searchTerm}`,
         isRandom ? 10 : 0 //if it's random get 10 pictures
       );
     } catch (error) {
       console.log(error);
+      return;
     }
 
-    let imageUrl = isRandom
-      ? selectRandomBackgroundImage(imageData)
-      : imageData[0].urls.regular;
+    if (imageData) {
+      let imageUrl = isRandom
+        ? selectRandomBackgroundImage(imageData)
+        : imageData[0].urls.regular;
 
-    setBackground(imageUrl);
+      setBackground(imageUrl);
+    }
   };
 
   /**
@@ -142,16 +138,16 @@ import {
    * @param {object} weatherData
    */
   const setAllWeatherData = (weatherData) => {
-    setCurrentWeatherData(weatherData.name, weatherData.current);
+    weatherElements["city"].innerHTML = weatherData.name;
+    setCurrentWeatherData(weatherData.current);
     setNextDaysWeather(weatherData.daily);
   };
 
   /**
    * Sets the weather data of the current day.
-   * @param {string} name name of the city
    * @param {object} weatherData
    */
-  const setCurrentWeatherData = (name, weatherData) => {
+  const setCurrentWeatherData = (weatherData) => {
     //Create dates from unix timestamps.
     let sunriseDateTime = new Date(weatherData.sunrise * 1000);
     let sunsetDateTime = new Date(weatherData.sunset * 1000);
@@ -200,7 +196,6 @@ import {
     weatherElements["wind"].innerHTML = `${weatherData.wind_speed} km/h`;
     weatherElements["pressure"].innerHTML = `${weatherData.pressure} hPa`;
     weatherElements["temp"].innerHTML = `${parseInt(weatherData.temp)}°`;
-    weatherElements["city"].innerHTML = name;
     weatherElements["description"].innerHTML =
       weatherData.weather[0].description;
     weatherElements["time"].innerHTML = formattedTime;
@@ -213,20 +208,20 @@ import {
 
   /**
    * Sets the weather data of the following days in a table in the sidebar.
-   * @param {object} weatherData
+   * @param {object} weatherDataArr
    */
-  const setNextDaysWeather = (weatherData) => {
+  const setNextDaysWeather = (weatherDataArr) => {
     //Add +1 because we don't show the current day.
-    let nrOfItems = Math.min(NR_OF_DAYS_TO_FORECAST + 1, weatherData.length);
+    let nrOfItems = Math.min(NR_OF_DAYS_TO_FORECAST + 1, weatherDataArr.length);
 
     weekOverview.innerHTML = ""; //remove children
     for (let i = 1; i < nrOfItems; i++) {
       //get weekday name, temp, icon
       let weekday = new Date(
-        weatherData[i].dt * 1000
+        weatherDataArr[i].dt * 1000
       ).toLocaleDateString(undefined, { weekday: "long" });
-      let temp = weatherData[i].temp.day;
-      let iconCode = weatherData[i].weather[0].id;
+      let temp = weatherDataArr[i].temp.day;
+      let iconCode = weatherDataArr[i].weather[0].id;
 
       //Create element
       let row = generateTableRow(weekOverview, { weekday, temp });
@@ -235,6 +230,10 @@ import {
       var weatherIcon = document.createElement("i");
       weatherIcon.className = `owf owf-${iconCode} owf-1x`;
       row.insertCell().appendChild(weatherIcon);
+
+      row.onclick = () => {
+        setCurrentWeatherData(weatherDataArr[i]);
+      };
     }
   };
 
@@ -263,29 +262,20 @@ import {
     //TODO: Store these locations in a cookie
     //Get all locations
     let locationElements = Array.from(
-      document.querySelectorAll("#weather-locations > li")
+      document.querySelectorAll("#weather-locations > option")
     );
 
     //Confirm new location is not in it yet.
     let isInList =
       locationElements.find(
-        (element) =>
-          element.innerHTML.toLowerCase() == newLocation.toLowerCase()
+        (element) => element.value.toLowerCase() == newLocation.toLowerCase()
       ) !== undefined;
 
     if (!isInList) {
       //Add new location
-      var li = document.createElement("li");
-      li.appendChild(document.createTextNode(newLocation));
-      li.onclick = onWeatherListElementClick;
-      locationsContainer.insertBefore(li, locationsContainer.firstChild);
-
-      //Check if amount of locations is not higher then max
-      while (
-        locationsContainer.childElementCount > NR_OF_LOCATIONS_IN_HISTORY
-      ) {
-        locationsContainer.removeChild(locationsContainer.lastChild);
-      }
+      var newOption = document.createElement("option");
+      newOption.value = newLocation;
+      locationsContainer.appendChild(newOption);
     }
   };
 
@@ -309,7 +299,7 @@ import {
    * Updates the page based on the user location.
    * Gets the weather data and displays it
    * Retrieves a matching background based on the weather description.
-   * @param {String} location
+   * @param {String} location the location to retrieve weather data from.
    * @return {boolean} true if the update was successful
    */
   const updatePage = async (location) => {
@@ -317,10 +307,15 @@ import {
       let weatherDataResponse = undefined;
       let weeklyWeatherDataResponse = undefined;
       try {
-        weatherDataResponse = await getCurrentWeatherDataForLocation(location);
+        weatherDataResponse = await VercelApi.getCurrentWeatherDataForLocation(
+          location
+        );
         //see: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment
-        var { lat, lon } = weatherDataResponse.coord;
-        weeklyWeatherDataResponse = await getWeeklyWeatherData(lat, lon);
+        let { lon, lat } = weatherDataResponse.coord;
+        weeklyWeatherDataResponse = await VercelApi.getWeeklyWeatherData(
+          lat,
+          lon
+        );
       } catch (error) {
         console.error(error);
         return false;
@@ -344,7 +339,7 @@ import {
    */
   const onUserLocationRetrieved = async (position) => {
     try {
-      let response = await getAddressFromLatLng(
+      let response = await VercelApi.getAddressFromLatLng(
         position.coords.latitude,
         position.coords.longitude
       );
@@ -402,14 +397,6 @@ import {
     }
   };
 
-  /**
-   * Callback whenever a user clicks on a weather location element.
-   */
-  function onWeatherListElementClick() {
-    cityInput.value = "";
-    updatePage(this.innerHTML);
-  }
-
   /* Add Event Listeners */
   document
     .getElementById("search-weather-button")
@@ -422,12 +409,6 @@ import {
       onSubmit(event);
     }
   });
-
-  Array.from(document.querySelectorAll("#weather-locations > li")).forEach(
-    (liElement) => {
-      liElement.addEventListener("click", onWeatherListElementClick);
-    }
-  );
 
   requestUserLocation();
   startPageUpdateInterval();

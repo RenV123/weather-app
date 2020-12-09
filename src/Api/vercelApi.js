@@ -1,5 +1,3 @@
-//File containing a json obj called WEATHER_CONFIG with my api key.
-
 const vercelServerlessAPI = axios.create({
   baseURL: "https://weather-app.renv123.vercel.app/api/",
 });
