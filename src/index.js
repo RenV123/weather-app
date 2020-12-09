@@ -1,4 +1,4 @@
-import * as VercelApi from "./Api/vercelApi.js";
+import { default as VercelApi } from "./Api/vercelApi.js";
 
 (() => {
   const NR_OF_DAYS_TO_FORECAST = 5;
@@ -31,9 +31,10 @@ import * as VercelApi from "./Api/vercelApi.js";
   };
 
   /**
-   * Returns a random number between min (inclusive) and max (exclusive)
-   * @param {number} min
-   * @param {number} max
+   * Returns a random number between min and max.
+   * @param {number} min minimum nr (inclusive)
+   * @param {number} max maximum nr exclusive)
+   * @return {number} random nr.
    */
   const getRandomNumber = (min, max) => {
     return Math.floor(Math.random() * max - min) + min;
@@ -42,19 +43,13 @@ import * as VercelApi from "./Api/vercelApi.js";
   /**
    * Uses the API to get a picture and set it as the page background.
    * @param {String} searchTerm search term to find a matching image for.
-   * @param {boolean} isRandom if true, will retrieve up to 5 images and pick a random one.
+   * @param {boolean} [isRandom=true] if true, will retrieve up to 5 images and pick a random one.
    */
   const requestNewBackground = async (searchTerm, isRandom = true) => {
-    let imageData = undefined;
-    try {
-      imageData = await VercelApi.getPicture(
-        `${searchTerm}`,
-        isRandom ? 10 : 0 //if it's random get 10 pictures
-      );
-    } catch (error) {
-      console.log(error);
-      return;
-    }
+    let imageData = await VercelApi.getPictures(
+      `${searchTerm}`,
+      isRandom ? 10 : 0 //if it's random get 10 pictures
+    );
 
     if (imageData) {
       let imageUrl = isRandom
@@ -67,7 +62,7 @@ import * as VercelApi from "./Api/vercelApi.js";
 
   /**
    * Selects a random background url from a list of images data objects.
-   * @param {Array.<imageData>} imageData
+   * @param {Array.<object>} imageData
    * @returns {String} url of the background.
    */
   const selectRandomBackgroundImage = (imageData) => {
@@ -208,7 +203,7 @@ import * as VercelApi from "./Api/vercelApi.js";
 
   /**
    * Sets the weather data of the following days in a table in the sidebar.
-   * @param {object} weatherDataArr
+   * @param {Array.<object>} weatherDataArr
    */
   const setNextDaysWeather = (weatherDataArr) => {
     //Add +1 because we don't show the current day.
@@ -241,6 +236,7 @@ import * as VercelApi from "./Api/vercelApi.js";
    * Generates a table row based on the values of the data object
    * @param {HTMLElement} table a table element
    * @param {object} data an object, the values will be placed in a cell.
+   * @return {HTMLElement} The generated row.
    */
   const generateTableRow = (table, data) => {
     let row = table.insertRow();
@@ -303,33 +299,16 @@ import * as VercelApi from "./Api/vercelApi.js";
    * @return {boolean} true if the update was successful
    */
   const updatePage = async (location) => {
-    if (location) {
-      let weatherDataResponse = undefined;
-      let weeklyWeatherDataResponse = undefined;
-      try {
-        weatherDataResponse = await VercelApi.getCurrentWeatherDataForLocation(
-          location
-        );
-        //see: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment
-        let { lon, lat } = weatherDataResponse.coord;
-        weeklyWeatherDataResponse = await VercelApi.getWeeklyWeatherData(
-          lat,
-          lon
-        );
-      } catch (error) {
-        console.error(error);
-        return false;
-      }
-      lastLocation = location;
-      setAllWeatherData({
-        name: weatherDataResponse.name,
-        ...weeklyWeatherDataResponse,
-      });
+    let weeklyWeatherData = await VercelApi.getWeeklyWeatherDataForLocation(
+      location
+    );
 
-      let weatherDescription = `${weatherDataResponse.name} ${weeklyWeatherDataResponse.current.weather[0].main}`;
-      requestNewBackground(weatherDescription, true);
-      return true;
-    }
+    lastLocation = location;
+    setAllWeatherData(weeklyWeatherData);
+
+    let weatherDescription = `${weeklyWeatherData.name} ${weeklyWeatherData.current.weather[0].main}`;
+    requestNewBackground(weatherDescription, true);
+    return true;
   };
 
   /**
@@ -338,16 +317,14 @@ import * as VercelApi from "./Api/vercelApi.js";
    * @param {object} position
    */
   const onUserLocationRetrieved = async (position) => {
-    try {
-      let response = await VercelApi.getAddressFromLatLng(
-        position.coords.latitude,
-        position.coords.longitude
-      );
-
-      addWeatherLocation(response.components.city);
-      updatePage(response.components.city);
-    } catch (error) {
-      console.error(error);
+    let response = await VercelApi.getAddressFromLatLng(
+      position.coords.latitude,
+      position.coords.longitude
+    );
+    let city = response?.components?.city;
+    if (city) {
+      addWeatherLocation(city);
+      updatePage(city);
     }
   };
 
