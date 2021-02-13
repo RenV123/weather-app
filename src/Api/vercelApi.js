@@ -35,8 +35,8 @@ async function getWeeklyWeatherDataForLocation(location) {
   let { lon, lat } = currentWeatherResponse?.coord;
   let response = await getWeeklyWeatherDataForCoords(lat, lon);
   return {
-    name: currentWeatherResponse.name,
     ...response,
+    name: currentWeatherResponse.name,
   };
 }
 
@@ -88,7 +88,6 @@ async function doApiCall(url = isRequired()) {
  * @access private
  */
 const isRequired = () => {
-  console.log(this);
   throw new Error("param is required");
 };
 
