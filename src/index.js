@@ -322,13 +322,10 @@ import { default as VercelApi } from './Api/vercelApi.js';
       position.coords.longitude
     );
 
-    let location = response?.components?.city;
-    if (!location) {
-      location = response?.components?.village;
-    }
-    if (!location) {
-      location = response?.components?.county;
-    }
+    let location =
+      response?.components?.city ??
+      response?.components?.village ??
+      response?.components?.county;
 
     if (location) {
       addWeatherLocation(location);
