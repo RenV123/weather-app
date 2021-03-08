@@ -1,5 +1,5 @@
 const vercelServerlessAPI = axios.create({
-  baseURL: "https://weather-app.renv123.vercel.app/api/",
+  baseURL: 'https://weather-app-renv123.vercel.app/api/',
 });
 
 /*Weather API Calls */
@@ -88,7 +88,7 @@ async function doApiCall(url = isRequired()) {
  * @access private
  */
 const isRequired = () => {
-  throw new Error("param is required");
+  throw new Error('param is required');
 };
 
 export default {
