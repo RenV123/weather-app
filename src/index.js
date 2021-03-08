@@ -1,33 +1,33 @@
-import { default as VercelApi } from "./Api/vercelApi.js";
+import { default as VercelApi } from './Api/vercelApi.js';
 
 (() => {
   const NR_OF_DAYS_TO_FORECAST = 5;
 
   let imgBackgroundLoader = new Image();
-  let lastLocation = "";
-  let lastBackgroundUrl = "";
+  let lastLocation = '';
+  let lastBackgroundUrl = '';
   let lowerOpacityInterval = undefined;
   let isBackgroundLoading = false;
 
-  let cityInput = document.getElementById("location-input");
-  let backgroundOneElement = document.getElementById("background-one");
-  let backgroundTwoElement = document.getElementById("background-two");
-  let weekOverview = document.getElementById("week-overview");
-  let locationsContainer = document.getElementById("weather-locations");
+  let cityInput = document.getElementById('location-input');
+  let backgroundOneElement = document.getElementById('background-one');
+  let backgroundTwoElement = document.getElementById('background-two');
+  let weekOverview = document.getElementById('week-overview');
+  let locationsContainer = document.getElementById('weather-locations');
 
   //Define all elements holding data in a single object so we can edit easily later.
   let weatherElements = {
-    sunrise: document.getElementById("current-weather-sunrise"),
-    sunset: document.getElementById("current-weather-sunset"),
-    humidity: document.getElementById("current-weather-humidity"),
-    wind: document.getElementById("current-weather-wind"),
-    pressure: document.getElementById("current-weather-pressure"),
-    temp: document.getElementById("current-weather-temp"),
-    city: document.getElementById("current-weather-city"),
-    description: document.getElementById("current-weather-description"),
-    time: document.getElementById("current-weather-time"),
-    date: document.getElementById("current-weather-date"),
-    icon: document.getElementById("current-weather-icon"),
+    sunrise: document.getElementById('current-weather-sunrise'),
+    sunset: document.getElementById('current-weather-sunset'),
+    humidity: document.getElementById('current-weather-humidity'),
+    wind: document.getElementById('current-weather-wind'),
+    pressure: document.getElementById('current-weather-pressure'),
+    temp: document.getElementById('current-weather-temp'),
+    city: document.getElementById('current-weather-city'),
+    description: document.getElementById('current-weather-description'),
+    time: document.getElementById('current-weather-time'),
+    date: document.getElementById('current-weather-date'),
+    icon: document.getElementById('current-weather-icon'),
   };
 
   /**
@@ -115,9 +115,9 @@ import { default as VercelApi } from "./Api/vercelApi.js";
         upperBg.style.opacity = `${currentOpacity}`;
 
         if (currentOpacity <= 0) {
-          lowerBg.style.zIndex = "-1"; //lower is now upper
-          upperBg.style.zIndex = "-2";
-          upperBg.style.opacity = "100%";
+          lowerBg.style.zIndex = '-1'; //lower is now upper
+          upperBg.style.zIndex = '-2';
+          upperBg.style.opacity = '100%';
           clearInterval(lowerOpacityInterval);
           isBackgroundLoading = false;
         }
@@ -133,7 +133,7 @@ import { default as VercelApi } from "./Api/vercelApi.js";
    * @param {object} weatherData
    */
   const setAllWeatherData = (weatherData) => {
-    weatherElements["city"].innerHTML = weatherData.name;
+    weatherElements['city'].innerHTML = weatherData.name;
     setCurrentWeatherData(weatherData.current);
     setNextDaysWeather(weatherData.daily);
   };
@@ -151,22 +151,22 @@ import { default as VercelApi } from "./Api/vercelApi.js";
     //Create time formatting options
     //see: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat
     const timeOptions = {
-      hour: "numeric",
-      minute: "numeric",
+      hour: 'numeric',
+      minute: 'numeric',
       hour12: true,
     };
 
     const dateTimeOptions = {
-      weekday: "long",
-      day: "numeric",
-      month: "long",
-      year: "numeric",
+      weekday: 'long',
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric',
     };
 
     //Use current time and split it into two parts. 'HH:MM' and am/pm part.
     let currentTimeParts = new Date()
       .toLocaleString(undefined, timeOptions)
-      .split(" ");
+      .split(' ');
 
     //Show the current time (HH:MM) with am in slightly smaller font.
     let formattedTime = `${currentTimeParts[0]} ${currentTimeParts[1].fontsize(
@@ -179,25 +179,25 @@ import { default as VercelApi } from "./Api/vercelApi.js";
       dateTimeOptions
     ).format(dateTime);
 
-    weatherElements["sunrise"].innerHTML = `${sunriseDateTime.toLocaleString(
+    weatherElements['sunrise'].innerHTML = `${sunriseDateTime.toLocaleString(
       undefined,
       timeOptions
     )}`;
-    weatherElements["sunset"].innerHTML = `${sunsetDateTime.toLocaleString(
+    weatherElements['sunset'].innerHTML = `${sunsetDateTime.toLocaleString(
       undefined,
       timeOptions
     )}`;
-    weatherElements["humidity"].innerHTML = `${weatherData.humidity} %`;
-    weatherElements["wind"].innerHTML = `${weatherData.wind_speed} km/h`;
-    weatherElements["pressure"].innerHTML = `${weatherData.pressure} hPa`;
-    weatherElements["temp"].innerHTML = `${parseInt(weatherData.temp)}°`;
-    weatherElements["description"].innerHTML =
+    weatherElements['humidity'].innerHTML = `${weatherData.humidity} %`;
+    weatherElements['wind'].innerHTML = `${weatherData.wind_speed} km/h`;
+    weatherElements['pressure'].innerHTML = `${weatherData.pressure} hPa`;
+    weatherElements['temp'].innerHTML = `${parseInt(weatherData.temp)}°`;
+    weatherElements['description'].innerHTML =
       weatherData.weather[0].description;
-    weatherElements["time"].innerHTML = formattedTime;
-    weatherElements["date"].innerHTML = formattedDate;
+    weatherElements['time'].innerHTML = formattedTime;
+    weatherElements['date'].innerHTML = formattedDate;
 
     weatherElements[
-      "icon"
+      'icon'
     ].className = `weather-icon owf owf-${weatherData.weather[0].id} owf-5x`;
   };
 
@@ -209,12 +209,12 @@ import { default as VercelApi } from "./Api/vercelApi.js";
     //Add +1 because we don't show the current day.
     let nrOfItems = Math.min(NR_OF_DAYS_TO_FORECAST + 1, weatherDataArr.length);
 
-    weekOverview.innerHTML = ""; //remove children
+    weekOverview.innerHTML = ''; //remove children
     for (let i = 1; i < nrOfItems; i++) {
       //get weekday name, temp, icon
       let weekday = new Date(
         weatherDataArr[i].dt * 1000
-      ).toLocaleDateString(undefined, { weekday: "long" });
+      ).toLocaleDateString(undefined, { weekday: 'long' });
       let temp = weatherDataArr[i].temp.day;
       let iconCode = weatherDataArr[i].weather[0].id;
 
@@ -222,7 +222,7 @@ import { default as VercelApi } from "./Api/vercelApi.js";
       let row = generateTableRow(weekOverview, { weekday, temp });
 
       //Add weather icon (using owfont)
-      var weatherIcon = document.createElement("i");
+      var weatherIcon = document.createElement('i');
       weatherIcon.className = `owf owf-${iconCode} owf-1x`;
       row.insertCell().appendChild(weatherIcon);
 
@@ -258,7 +258,7 @@ import { default as VercelApi } from "./Api/vercelApi.js";
     //TODO: Store these locations in a cookie
     //Get all locations
     let locationElements = Array.from(
-      document.querySelectorAll("#weather-locations > option")
+      document.querySelectorAll('#weather-locations > option')
     );
 
     //Confirm new location is not in it yet.
@@ -269,7 +269,7 @@ import { default as VercelApi } from "./Api/vercelApi.js";
 
     if (!isInList) {
       //Add new location
-      var newOption = document.createElement("option");
+      var newOption = document.createElement('option');
       newOption.value = newLocation;
       locationsContainer.appendChild(newOption);
     }
@@ -287,7 +287,7 @@ import { default as VercelApi } from "./Api/vercelApi.js";
         onUserLocationDenied
       );
     } else {
-      console.log("Geolocation is not supported by this browser.");
+      console.log('Geolocation is not supported by this browser.');
     }
   };
 
@@ -321,10 +321,20 @@ import { default as VercelApi } from "./Api/vercelApi.js";
       position.coords.latitude,
       position.coords.longitude
     );
-    let city = response?.components?.city;
-    if (city) {
-      addWeatherLocation(city);
-      updatePage(city);
+
+    let location = response?.components?.city;
+    if (!location) {
+      location = response?.components?.village;
+    }
+    if (!location) {
+      location = response?.components?.county;
+    }
+
+    if (location) {
+      addWeatherLocation(location);
+      updatePage(location);
+    } else {
+      console.error(`Couldn't determine location from: ${response}`);
     }
   };
 
@@ -346,7 +356,9 @@ import { default as VercelApi } from "./Api/vercelApi.js";
     //Start an interval with the delay
     setTimeout(() => {
       //First time we need to call it manually as the interval will only trigger the next minute.
-      updatePage(lastLocation);
+      if (lastLocation) {
+        updatePage(lastLocation);
+      }
 
       setInterval(() => {
         updatePage(lastLocation);
@@ -363,26 +375,26 @@ import { default as VercelApi } from "./Api/vercelApi.js";
     let successfullyUpdated = await updatePage(cityInput.value);
     if (successfullyUpdated) {
       addWeatherLocation(cityInput.value);
-      cityInput.value = "";
+      cityInput.value = '';
     } else {
       //Show error animation by adding error class.
-      cityInput.classList.add("error");
+      cityInput.classList.add('error');
       setTimeout(function () {
-        cityInput.classList.remove("error");
-        cityInput.value = "";
+        cityInput.classList.remove('error');
+        cityInput.value = '';
       }, 1000);
     }
   };
 
   /* Add Event Listeners */
   document
-    .getElementById("search-weather-button")
-    .addEventListener("click", onSubmit);
-  cityInput.addEventListener("submit", onSubmit);
+    .getElementById('search-weather-button')
+    .addEventListener('click', onSubmit);
+  cityInput.addEventListener('submit', onSubmit);
 
   /*Listen to enter key press in input box */
-  cityInput.addEventListener("keyup", (event) => {
-    if (event.key === "Enter") {
+  cityInput.addEventListener('keyup', (event) => {
+    if (event.key === 'Enter') {
       onSubmit(event);
     }
   });
