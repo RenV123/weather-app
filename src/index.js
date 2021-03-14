@@ -291,6 +291,19 @@ import { default as VercelApi } from './Api/vercelApi.min.js';
     }
   };
 
+  const getUserLocation = async () => {
+    let response = await VercelApi.getAddressFromIP();
+
+    let location = response?.city ?? response?.region;
+
+    if (location) {
+      addWeatherLocation(location);
+      updatePage(location);
+    } else {
+      console.error(`Couldn't determine location from: ${response}`);
+    }
+  };
+
   /**
    * Updates the page based on the user location.
    * Gets the weather data and displays it
@@ -396,6 +409,6 @@ import { default as VercelApi } from './Api/vercelApi.min.js';
     }
   });
 
-  requestUserLocation();
+  getUserLocation();
   startPageUpdateInterval();
 })();

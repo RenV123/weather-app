@@ -54,6 +54,15 @@ async function getAddressFromLatLng(lat, lon) {
 }
 
 /**
+ * Gets an address based on the ip of the client
+ * @returns {Promise} a promise containing the data or undefined if there was an error.
+ */
+async function getAddressFromIP() {
+  let response = await _doApiCall(`/ip-geolocate`);
+  return response?.data;
+}
+
+/**
  * Retrieves a list of pictures based on the queryterm.
  * Note: only returns the metadata and the url not the actual pictures.
  * @param {String} queryTerm search term to look for images
@@ -98,5 +107,6 @@ export default {
   getWeeklyWeatherDataForCoords,
   getWeeklyWeatherDataForLocation,
   getAddressFromLatLng,
+  getAddressFromIP,
   getPictures,
 };
