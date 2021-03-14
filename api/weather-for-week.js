@@ -13,7 +13,7 @@ async function getWeeklyWeatherData(lat, long) {
 
 module.exports = async (request, response) => {
   try {
-    console.log(JSON.stringify(request.body));
+    console.log(JSON.stringify(request.headers));
     const weatherDataResponse = await getWeeklyWeatherData(
       request.query.lat,
       request.query.lon
