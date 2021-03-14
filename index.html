@@ -6,16 +6,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Weather App</title>
 
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oxygen&display=swap">
+    <!-- Technique to load Google Fonts async fast see: https://csswizardry.com/2020/05/the-fastest-google-fonts/ -->
+    <link rel="preload" as="style" href="./css/min/google-fonts.min.css">
+    <link rel="stylesheet" href="./css/min/google-fonts.min.css" media="print" onload="this.media='all'">
+    <noscript>
+        <link rel="stylesheet" href="./css/min/google-fonts.min.css" />
+    </noscript>
 
     <!-- OpenWeatherMap Icon Font -->
-    <link rel="stylesheet" href="./css/owfont-regular.css" type="text/css">
+    <link rel="preload" as="style" href="./css/min/owfont-regular.min.css">
+    <link rel="stylesheet" href="./css/min/owfont-regular.min.css" media="print" onload="this.media='all'">
+    <noscript>
+        <link rel="stylesheet" href="./css/min/owfont-regular.min.css" />
+    </noscript>
 
     <!-- My stylesheet -->
-    <link rel="stylesheet" href="./css/style.css" type="text/css">
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <link rel="stylesheet" href="./css/min/style.min.css" type="text/css">
+    <script src="./src/Thirdparty/axios.min.js" defer></script>
     <script src="./src/index.js" type="module"></script>
 </head>
 
@@ -27,14 +34,14 @@
             <div class="sidebar-inner">
                 <div class="searchbox-container">
                     <input class="searchbox" type="text" id="location-input" placeholder="Enter location"
-                        list="weather-locations">
+                        list="weather-locations" aria-label="searchbox">
                     <datalist class="form-control" id="weather-locations">
                         <option value="London" />
                         <option value="New York" />
                         <option value="Berlin" />
                     </datalist>
-                    <button class="search-button" id="search-weather-button">
-                        <img src="./css/images/search.svg">
+                    <button class="search-button" id="search-weather-button" aria-label="Search">
+                        <img src="./css/images/search.svg" width="20" height="20" alt="search icon">
                     </button>
                 </div>
                 <hr id="searchbox-underline">
