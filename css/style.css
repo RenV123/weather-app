@@ -39,7 +39,7 @@
   background-position: 0% 100%;
   width: 100vw;
   height: 100vh;
-  background-image: url("./images/clouds.jpg");
+  background-image: url('./images/clouds.webp');
 }
 
 .background-body-one {
@@ -50,7 +50,7 @@
   background-position: 0% 100%;
   width: 100vw;
   height: 100vh;
-  background-image: url("./images/clouds.jpg");
+  background-image: url('./images/clouds.webp');
 }
 
 body {
@@ -63,7 +63,7 @@ body {
   height: 100vh;
 
   /*Fonts and colors*/
-  font-family: "Oxygen", sans-serif;
+  font-family: 'Oxygen', sans-serif;
   color: var(--primary-text-color);
 }
 
@@ -186,7 +186,7 @@ hr {
 .sidebar-title {
   padding-top: var(--sidebar-element-padding);
   font-size: 1.1rem;
-  font-family: "Oxygen Bold", sans-serif;
+  font-family: 'Oxygen Bold', sans-serif;
   font-weight: 600;
 }
 

@@ -1,3 +1,5 @@
+'use strict';
+
 const vercelServerlessAPI = axios.create({
   baseURL: 'https://weather-app-renv123.vercel.app/api/',
 });
