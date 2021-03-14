@@ -1,8 +1,8 @@
-require("dotenv").config();
-const axios = require("axios");
+require('dotenv').config();
+const axios = require('axios');
 
 const unsplashAPI = axios.create({
-  baseURL: "https://api.unsplash.com/",
+  baseURL: 'https://api.unsplash.com/',
   headers: {
     Authorization: `Client-ID ${process.env.UNSPLASH_ACCESS_KEY}`,
   },
@@ -23,6 +23,8 @@ module.exports = async (request, response) => {
       request.query.query,
       request.query.nr
     );
+    response.setHeader('Access-Control-Allow-Credentials', `true`);
+    response.setHeader('Access-Control-Allow-Origin', '*');
     response.send({
       ...picturesResponse,
     });

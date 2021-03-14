@@ -1,8 +1,8 @@
-require("dotenv").config();
-const axios = require("axios");
+require('dotenv').config();
+const axios = require('axios');
 
 const openWeatherMapAPI = axios.create({
-  baseURL: "https://api.openweathermap.org/data/2.5",
+  baseURL: 'https://api.openweathermap.org/data/2.5',
 });
 
 async function getWeeklyWeatherData(lat, long) {
@@ -13,10 +13,13 @@ async function getWeeklyWeatherData(lat, long) {
 
 module.exports = async (request, response) => {
   try {
+    console.log(JSON.stringify(request));
     const weatherDataResponse = await getWeeklyWeatherData(
       request.query.lat,
       request.query.lon
     );
+    response.setHeader('Access-Control-Allow-Credentials', `true`);
+    response.setHeader('Access-Control-Allow-Origin', '*');
     response.send({
       ...weatherDataResponse.data,
     });

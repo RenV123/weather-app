@@ -1,8 +1,8 @@
-require("dotenv").config();
-const axios = require("axios");
+require('dotenv').config();
+const axios = require('axios');
 
 const openCageDataAPI = axios.create({
-  baseURL: "https://api.opencagedata.com/geocode/v1",
+  baseURL: 'https://api.opencagedata.com/geocode/v1',
 });
 
 /*Reverse Geocoding API Calls */
@@ -21,6 +21,8 @@ module.exports = async (request, response) => {
       request.query.lat,
       request.query.lon
     );
+    response.setHeader('Access-Control-Allow-Credentials', `true`);
+    response.setHeader('Access-Control-Allow-Origin', '*');
     response.send({
       ...addressResponse,
     });

@@ -11,7 +11,7 @@ const vercelServerlessAPI = axios.create({
  * @returns {Promise} a promise containing the data or undefined if there was an error.
  */
 async function getCurrentWeatherDataForLocation(location) {
-  let response = await doApiCall(`/weather-for-location?location=${location}`);
+  let response = await _doApiCall(`/weather-for-location?location=${location}`);
   return response?.data;
 }
 
@@ -22,7 +22,7 @@ async function getCurrentWeatherDataForLocation(location) {
  * @returns {Promise} a promise containing the data or undefined if there was an error.
  */
 async function getWeeklyWeatherDataForCoords(lat, lon) {
-  let response = await doApiCall(`/weather-for-week?lat=${lat}&lon=${lon}`);
+  let response = await _doApiCall(`/weather-for-week?lat=${lat}&lon=${lon}`);
   return response?.data;
 }
 
@@ -49,7 +49,7 @@ async function getWeeklyWeatherDataForLocation(location) {
  * @returns {Promise} a promise containing the data or undefined if there was an error.
  */
 async function getAddressFromLatLng(lat, lon) {
-  let response = await doApiCall(`/reverse-geocode?lat=${lat}&lon=${lon}`);
+  let response = await _doApiCall(`/reverse-geocode?lat=${lat}&lon=${lon}`);
   return response?.data;
 }
 
@@ -61,7 +61,7 @@ async function getAddressFromLatLng(lat, lon) {
  * @returns {Promise} a promise containing the data or undefined if there was an error.
  */
 async function getPictures(queryTerm, nrOfPictures = 1) {
-  let response = await doApiCall(
+  let response = await _doApiCall(
     `/picture?query=${queryTerm}&nr=${nrOfPictures}`
   );
   return response?.data?.results;
@@ -74,7 +74,7 @@ async function getPictures(queryTerm, nrOfPictures = 1) {
  * @param {string} url - the url to call (without the base url).
  * @returns {Promise} a promise containing the data or undefined if there was an error.
  */
-async function doApiCall(url = isRequired()) {
+async function _doApiCall(url = isRequired()) {
   let response = undefined;
   try {
     response = await vercelServerlessAPI.get(url);
