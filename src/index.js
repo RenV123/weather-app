@@ -1,4 +1,4 @@
-import { default as VercelApi } from './Api/vercelApi.js';
+import { default as VercelApi } from './Api/vercelApi.min.js';
 
 (() => {
   const NR_OF_DAYS_TO_FORECAST = 5;
