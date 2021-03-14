@@ -4,6 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex">
+    <!-- <meta name="theme-color" content="#011627"> -->
+    <meta name="Description" content="Weather app,site using OpenWeatherMap data.">
     <title>Weather App</title>
 
     <!-- Technique to load Google Fonts async fast see: https://csswizardry.com/2020/05/the-fastest-google-fonts/ -->
@@ -36,9 +39,9 @@
                     <input class="searchbox" type="text" id="location-input" placeholder="Enter location"
                         list="weather-locations" aria-label="searchbox">
                     <datalist class="form-control" id="weather-locations">
-                        <option value="London" />
-                        <option value="New York" />
-                        <option value="Berlin" />
+                        <option value="London"></option>
+                        <option value="New York"></option>
+                        <option value="Berlin"></option>
                     </datalist>
                     <button class="search-button" id="search-weather-button" aria-label="Search">
                         <img src="./css/images/search.svg" width="20" height="20" alt="search icon">
