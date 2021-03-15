@@ -1,6 +1,6 @@
 # Weather App
 
-A animalistic site that displays the weather info. Along with a picture
+A minimalistic site that displays the weather info. Along with a picture
 of the entered location. Created as an exercise to learn API's.
 The site asks for the users location and retrieves weather data for it,
 otherwise the user can enter a location.
@@ -21,7 +21,7 @@ API keys to github. I'm trying to find a way around this problem.
  * [Google Fonts](https://fonts.google.com/)
  * [IconFinder](https://www.iconfinder.com/)
 
-## Todo's:
+## Todos:
  * Fix API keys
  * Get Weather data for 5 days
  * Add weather effects
