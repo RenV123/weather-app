@@ -5,48 +5,35 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="noindex">
-    <!-- <meta name="theme-color" content="#011627"> -->
     <meta name="Description" content="Weather app,site using OpenWeatherMap data.">
     <title>Weather App</title>
-
-    <!-- Technique to load Google Fonts async fast see: https://csswizardry.com/2020/05/the-fastest-google-fonts/ -->
     <link rel="preload" as="style" href="./css/google-fonts.min.css">
-    <link rel="stylesheet" href="./css/google-fonts.min.css" media="print" onload="this.media='all'">
-    <noscript>
+    <link rel="stylesheet" href="./css/google-fonts.min.css" media="print" onload="this.media='all'"><noscript>
         <link rel="stylesheet" href="./css/google-fonts.min.css" />
     </noscript>
-
-    <!-- OpenWeatherMap Icon Font -->
     <link rel="preload" as="style" href="./css/owfont-regular.min.css">
-    <link rel="stylesheet" href="./css/owfont-regular.min.css" media="print" onload="this.media='all'">
-    <noscript>
+    <link rel="stylesheet" href="./css/owfont-regular.min.css" media="print" onload="this.media='all'"><noscript>
         <link rel="stylesheet" href="./css/owfont-regular.min.css" />
     </noscript>
-
-    <!-- My stylesheet -->
     <link rel="stylesheet" href="./css/style.min.css" type="text/css">
-    <script src="./src/Thirdparty/axios.min.js" defer></script>
-    <script src="./src/index.min.js" type="module"></script>
+    <script rel="preload" src="./src/Thirdparty/axios.min.js" defer></script>
+    <script rel="preload" src="./src/index.min.js" type="module"></script>
 </head>
 
 <body>
-    <div class="background-body-one" id="background-one" style="z-index: -1;"></div>
-    <div class="background-body-two" id="background-two" style="z-index: -2;"></div>
+    <div class="background-body-one" id="background-one" style="z-index:-1;"></div>
+    <div class="background-body-two" id="background-two" style="z-index:-2;"></div>
     <div class="weather-container">
         <div class="sidebar">
             <div class="sidebar-inner">
-                <div class="searchbox-container">
-                    <input class="searchbox" type="text" id="location-input" placeholder="Enter location"
-                        list="weather-locations" aria-label="searchbox">
-                    <datalist class="form-control" id="weather-locations">
+                <div class="searchbox-container"><input class="searchbox" type="text" id="location-input"
+                        placeholder="Enter location" list="weather-locations" aria-label="searchbox"><datalist
+                        class="form-control" id="weather-locations">
                         <option value="London"></option>
                         <option value="New York"></option>
                         <option value="Berlin"></option>
-                    </datalist>
-                    <button class="search-button" id="search-weather-button" aria-label="Search">
-                        <img src="./css/images/search.svg" width="20" height="20" alt="search icon">
-                    </button>
-                </div>
+                    </datalist><button class="search-button" id="search-weather-button" aria-label="Search"><img
+                            src="./css/images/search.svg" width="20" height="20" alt="search icon"></button></div>
                 <hr id="searchbox-underline">
                 <p class="sidebar-title">Weather Details</p>
                 <table class="weather-details">
@@ -73,8 +60,7 @@
                 </table>
                 <hr>
                 <p class="sidebar-title">Next days</p>
-                <table class="weather-week-overview" id="week-overview">
-                </table>
+                <table class="weather-week-overview" id="week-overview"></table>
             </div>
         </div>
         <div class="weather-container-inner">
@@ -89,8 +75,7 @@
                 <div>
                     <p class="weather-city" id="current-weather-city"></p>
                 </div>
-                <div>
-                    <i class="weather-icon" id="current-weather-icon"></i>
+                <div><i class="weather-icon" id="current-weather-icon"></i>
                     <p class="weather-description" id="current-weather-description"></p>
                 </div>
             </div>
