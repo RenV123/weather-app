@@ -8,7 +8,7 @@ const openCageDataAPI = axios.create({
 /*Reverse Geocoding API Calls */
 async function getAddressFromLatLng(lat, lng) {
   //https://maps.googleapis.com/maps/api/geocode/json?latlng=40.714224,-73.961452&key=API_KEY
-  var response = await openCageDataAPI.get(
+  const response = await openCageDataAPI.get(
     `/json?q=${lat}+${lng}&key=${process.env.OPEN_CAGE_DATA_API_KEY}`
   );
   //TODO: add some validation

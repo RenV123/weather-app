@@ -17,8 +17,8 @@ async function getCurrentWeatherDataForLocation(location) {
 
 /**
  * Returns the weather data for a location of the next week.
- * @param {number} lat
- * @param {number} lon
+ * @param {Number} lat
+ * @param {Number} lon
  * @returns {Promise} a promise containing the data or undefined if there was an error.
  */
 async function getWeeklyWeatherDataForCoords(lat, lon) {
@@ -28,8 +28,7 @@ async function getWeeklyWeatherDataForCoords(lat, lon) {
 
 /**
  * Returns the weather data for a location of the next week.
- * @param {number} lat
- * @param {number} lon
+ * @param {String} location the location to get the weather of. (e.g. 'London')
  * @returns {Promise} a promise containing the data or undefined if there was an error.
  */
 async function getWeeklyWeatherDataForLocation(location) {
@@ -44,8 +43,8 @@ async function getWeeklyWeatherDataForLocation(location) {
 
 /**
  * Returns an address based on the lat lon given.
- * @param {number} lat
- * @param {number} lon
+ * @param {Number} lat
+ * @param {Number} lon
  * @returns {Promise} a promise containing the data or undefined if there was an error.
  */
 async function getAddressFromLatLng(lat, lon) {
@@ -66,7 +65,7 @@ async function getAddressFromIP() {
  * Retrieves a list of pictures based on the queryterm.
  * Note: only returns the metadata and the url not the actual pictures.
  * @param {String} queryTerm search term to look for images
- * @param {number} [nrOfPictures=1] nr of pictures to retrieve.
+ * @param {Number} [nrOfPictures=1] nr of pictures to retrieve.
  * @returns {Promise} a promise containing the data or undefined if there was an error.
  */
 async function getPictures(queryTerm, nrOfPictures = 1) {
@@ -78,12 +77,11 @@ async function getPictures(queryTerm, nrOfPictures = 1) {
 
 /**
  * Internal function used to do Vercel api calls.
- * Do not use outside this class !!
  * @access private
- * @param {string} url - the url to call (without the base url).
+ * @param {String} url - the url to call (without the base url).
  * @returns {Promise} a promise containing the data or undefined if there was an error.
  */
-async function _doApiCall(url = isRequired()) {
+async function _doApiCall(url = _isRequired()) {
   let response = undefined;
   try {
     response = await vercelServerlessAPI.get(url);
@@ -98,7 +96,7 @@ async function _doApiCall(url = isRequired()) {
  * Do not use outside this class !!
  * @access private
  */
-const isRequired = () => {
+const _isRequired = () => {
   throw new Error('param is required');
 };
 

@@ -7,7 +7,7 @@ const ipGeoLocate = axios.create({
 
 /*IP Geocode API Call */
 async function getLocationFromIp(ipAddress) {
-  var response = await ipGeoLocate.get(
+  const response = await ipGeoLocate.get(
     `/?api_key=${process.env.IPGEOLOCATE_API_KEY}&ip_address=${ipAddress}`
   );
   return response.data;

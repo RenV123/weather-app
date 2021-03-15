@@ -105,9 +105,9 @@ import { default as VercelApi } from './Api/vercelApi.min.js';
 
     //Set img to lowerbg, once loaded lower opacity of upperbg to 0 and swap zIndexes;
     // This creates a smooth transition between backgrounds
-    imgBackgroundLoader.onload = (event) => {
+    imgBackgroundLoader.onload = () => {
       lowerBg.style.backgroundImage = `url('${imgBackgroundLoader.src}')`;
-      var currentOpacity = 1.0;
+      let currentOpacity = 1.0;
       isBackgroundLoading = true;
 
       lowerOpacityInterval = setInterval(() => {
@@ -222,7 +222,7 @@ import { default as VercelApi } from './Api/vercelApi.min.js';
       let row = generateTableRow(weekOverview, { weekday, temp });
 
       //Add weather icon (using owfont)
-      var weatherIcon = document.createElement('i');
+      let weatherIcon = document.createElement('i');
       weatherIcon.className = `owf owf-${iconCode} owf-1x`;
       row.insertCell().appendChild(weatherIcon);
 
@@ -264,12 +264,12 @@ import { default as VercelApi } from './Api/vercelApi.min.js';
     //Confirm new location is not in it yet.
     let isInList =
       locationElements.find(
-        (element) => element.value.toLowerCase() == newLocation.toLowerCase()
+        (element) => element.value.toLowerCase() === newLocation.toLowerCase()
       ) !== undefined;
 
     if (!isInList) {
       //Add new location
-      var newOption = document.createElement('option');
+      let newOption = document.createElement('option');
       newOption.value = newLocation;
       locationsContainer.appendChild(newOption);
     }
@@ -316,11 +316,14 @@ import { default as VercelApi } from './Api/vercelApi.min.js';
       location
     );
 
-    lastLocation = location;
-    setAllWeatherData(weeklyWeatherData);
+    if(weeklyWeatherData) {
+      lastLocation = location;
+      setAllWeatherData(weeklyWeatherData);
 
-    let weatherDescription = `${weeklyWeatherData.name} ${weeklyWeatherData.current.weather[0].main}`;
-    requestNewBackground(weatherDescription, true);
+      let weatherDescription = `${weeklyWeatherData.name} ${weeklyWeatherData.current.weather[0].main}`;
+      requestNewBackground(weatherDescription, true);
+    }
+
     return true;
   };
 

@@ -10,8 +10,8 @@ const unsplashAPI = axios.create({
 
 /*Unsplash API calls */
 async function getPicture(query, nrOfPictures) {
-  var response = await unsplashAPI.get(
-    `/search/photos?query=${query}&per_page=${nrOfPictures}&orientation=landscape`
+  const response = await unsplashAPI.get(
+      `/search/photos?query=${query}&per_page=${nrOfPictures}&orientation=landscape`
   );
   //TODO: add some validation
   return response.data;
