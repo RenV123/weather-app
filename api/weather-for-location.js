@@ -17,7 +17,7 @@ module.exports = async (request, response) => {
     const weatherDataResponse = await getCurrentWeatherDataForLocation(
       request.query.location
     );
-    if (validateOriginHeader(request.headers['Origin'])) {
+    if (validateOriginHeader(request.headers['origin'])) {
       response.setHeader('Access-Control-Allow-Credentials', `true`);
       response.setHeader('Access-Control-Allow-Origin', '*');
     }
