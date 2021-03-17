@@ -1,5 +1,5 @@
 require('dotenv').config();
-require('./helpers/validateOrigin');
+const { validateOriginHeader } = require('./helpers/validateOrigin');
 const axios = require('axios');
 
 const ipGeoLocate = axios.create({
@@ -19,7 +19,8 @@ module.exports = async (request, response) => {
     const addressResponse = await getLocationFromIp(
       request.headers['x-real-ip']
     );
-    if (validateOriginHeader(request.headers['Origin'])) {
+    console.log(request.headers);
+    if (validateOriginHeader(request.headers['origin'])) {
       response.setHeader('Access-Control-Allow-Credentials', `true`);
       response.setHeader('Access-Control-Allow-Origin', '*');
     }
