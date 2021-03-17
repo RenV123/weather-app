@@ -1,6 +1,6 @@
 require('dotenv').config();
 const axios = require('axios');
-import { validateOriginHeader } from './helpers/validateOrigin';
+import validateOriginHeader from './helpers/validateOrigin';
 
 const openWeatherMapAPI = axios.create({
   baseURL: 'https://api.openweathermap.org/data/2.5',
