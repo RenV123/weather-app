@@ -18,7 +18,7 @@ module.exports = async (request, response) => {
       request.query.lat,
       request.query.lon
     );
-    if (validateOriginHeader(request.headers['origin'])) {
+    if (validateOriginHeader(request.headers['host'])) {
       response.setHeader('Access-Control-Allow-Credentials', `true`);
       response.setHeader('Access-Control-Allow-Origin', '*');
     }
