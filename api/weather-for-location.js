@@ -1,5 +1,5 @@
 require('dotenv').config();
-require('./helpers/validateOrigin');
+const { validateOriginHeader } = require('./helpers/validateOrigin');
 const axios = require('axios');
 
 const openWeatherMapAPI = axios.create({
