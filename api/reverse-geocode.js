@@ -1,6 +1,6 @@
 require('dotenv').config();
+require('./helpers/validateOrigin');
 const axios = require('axios');
-import { validateOriginHeader } from './helpers/validateOrigin';
 
 const openCageDataAPI = axios.create({
   baseURL: 'https://api.opencagedata.com/geocode/v1',

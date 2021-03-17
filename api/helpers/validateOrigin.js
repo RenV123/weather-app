@@ -11,13 +11,11 @@ const validOrigins = [
  * @param {String} origin
  * @returns
  */
-function validateOriginHeader(origin) {
+exports.validateOriginHeader = function (origin) {
   return (
     validOrigins.includes(origin) ||
     //Needed for deployment urls to work.
     (origin.startsWith('https://weather-app-') &&
       origin.endsWith('-renv123.vercel.app'))
   );
-}
-
-export default validateOriginHeader;
+};

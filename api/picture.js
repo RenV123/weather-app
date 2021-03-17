@@ -1,6 +1,6 @@
 require('dotenv').config();
+require('./helpers/validateOrigin');
 const axios = require('axios');
-import { validateOriginHeader } from './helpers/validateOrigin';
 
 const unsplashAPI = axios.create({
   baseURL: 'https://api.unsplash.com/',
