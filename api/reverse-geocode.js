@@ -15,14 +15,26 @@ async function getAddressFromLatLng(lat, lng) {
   return response.data.results[0];
 }
 
+const validOrigins = [
+  'https://weather-app-flame.vercel.app/',
+  'https://weather-app-renv123.vercel.app',
+  'https://weather-app-git-vercel-serverless-functions-renv123.vercel.app',
+];
+
+const validateOriginHeader = (origin) => {
+  return validOrigins.includes(origin);
+};
+
 module.exports = async (request, response) => {
   try {
     const addressResponse = await getAddressFromLatLng(
       request.query.lat,
       request.query.lon
     );
-    response.setHeader('Access-Control-Allow-Credentials', `true`);
-    response.setHeader('Access-Control-Allow-Origin', '*');
+    if (validateOriginHeader(request.headers['host'])) {
+      response.setHeader('Access-Control-Allow-Credentials', `true`);
+      response.setHeader('Access-Control-Allow-Origin', '*');
+    }
     response.send({
       ...addressResponse,
     });

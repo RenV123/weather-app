@@ -11,11 +11,21 @@ const unsplashAPI = axios.create({
 /*Unsplash API calls */
 async function getPicture(query, nrOfPictures) {
   const response = await unsplashAPI.get(
-      `/search/photos?query=${query}&per_page=${nrOfPictures}&orientation=landscape`
+    `/search/photos?query=${query}&per_page=${nrOfPictures}&orientation=landscape`
   );
   //TODO: add some validation
   return response.data;
 }
+
+const validOrigins = [
+  'https://weather-app-flame.vercel.app/',
+  'https://weather-app-renv123.vercel.app',
+  'https://weather-app-git-vercel-serverless-functions-renv123.vercel.app',
+];
+
+const validateOriginHeader = (origin) => {
+  return validOrigins.includes(origin);
+};
 
 module.exports = async (request, response) => {
   try {
@@ -23,8 +33,10 @@ module.exports = async (request, response) => {
       request.query.query,
       request.query.nr
     );
-    response.setHeader('Access-Control-Allow-Credentials', `true`);
-    response.setHeader('Access-Control-Allow-Origin', '*');
+    if (validateOriginHeader(request.headers['host'])) {
+      response.setHeader('Access-Control-Allow-Credentials', `true`);
+      response.setHeader('Access-Control-Allow-Origin', '*');
+    }
     response.send({
       ...picturesResponse,
     });

@@ -13,13 +13,25 @@ async function getLocationFromIp(ipAddress) {
   return response.data;
 }
 
+const validOrigins = [
+  'https://weather-app-flame.vercel.app/',
+  'https://weather-app-renv123.vercel.app',
+  'https://weather-app-git-vercel-serverless-functions-renv123.vercel.app',
+];
+
+const validateOriginHeader = (origin) => {
+  return validOrigins.includes(origin);
+};
+
 module.exports = async (request, response) => {
   try {
     const addressResponse = await getLocationFromIp(
       request.headers['x-real-ip']
     );
-    response.setHeader('Access-Control-Allow-Credentials', `true`);
-    response.setHeader('Access-Control-Allow-Origin', '*');
+    if (validateOriginHeader(request.headers['host'])) {
+      response.setHeader('Access-Control-Allow-Credentials', `true`);
+      response.setHeader('Access-Control-Allow-Origin', '*');
+    }
     response.send({
       ...addressResponse,
     });
