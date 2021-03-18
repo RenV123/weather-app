@@ -24,7 +24,9 @@ module.exports = async (request, response) => {
       request.query.query,
       request.query.nr
     );
-    if (validateOriginHeader(request.headers['host'])) {
+    console.log(request.headers);
+    const originHeader = request.headers['origin'];
+    if (originHeader && validateOriginHeader(originHeader)) {
       response.setHeader('Access-Control-Allow-Credentials', `true`);
       response.setHeader('Access-Control-Allow-Origin', '*');
     }
