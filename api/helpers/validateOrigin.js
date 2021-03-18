@@ -8,7 +8,7 @@ const validOrigins = [
 function validateOriginHeader(e) {
   return (
     validOrigins.includes(e) ||
-    (e.startsWith('weather-app-') && e.endsWith('-renv123.vercel.app'))
+    (e.startsWith('https://weather-app-') && e.endsWith('-renv123.vercel.app'))
   );
 }
 module.exports = { validateOriginHeader: validateOriginHeader };
