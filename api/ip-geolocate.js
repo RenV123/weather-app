@@ -19,7 +19,9 @@ module.exports = async (request, response) => {
     const addressResponse = await getLocationFromIp(
       request.headers['x-real-ip']
     );
-    if (validateOriginHeader(request.headers['host'])) {
+    console.log(request.headers);
+    const originHeader = request.headers['origin'];
+    if (originHeader && validateOriginHeader(originHeader)) {
       response.setHeader('Access-Control-Allow-Credentials', `true`);
       response.setHeader('Access-Control-Allow-Origin', '*');
     }
