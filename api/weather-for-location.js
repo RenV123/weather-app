@@ -21,7 +21,7 @@ module.exports = async (request, response) => {
     const originHeader = request.headers['origin'];
     if (originHeader && validateOriginHeader(originHeader)) {
       response.setHeader('Access-Control-Allow-Credentials', `true`);
-      response.setHeader('Access-Control-Allow-Origin', '*');
+      response.setHeader('Access-Control-Allow-Origin', originHeader);
     }
     response.send({
       ...weatherDataResponse.data,
